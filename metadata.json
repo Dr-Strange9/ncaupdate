@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "description": "",
+  "name": "New Case Alert",
+  "description": "Medical emergency department case documentation and New Case Alert (NCA) message generator.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

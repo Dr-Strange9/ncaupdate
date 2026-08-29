@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { FormState, initialState, Doctor, Comorbidity, initialComorbidity } from './types';
 import { Field, Input, Select, Switch, Textarea } from './components/ui';
-import { ComorbidityField } from './components/ComorbidityField';
+import { PastHistorySection } from './components/PastHistorySection';
+import { DoctorsSection } from './components/DoctorsSection';
 import { buildMessage, buildPreNcaMessage } from './utils';
 import { useClipboard } from './hooks/useClipboard';
 import { AlertCircle, Copy, X } from 'lucide-react';
@@ -75,6 +76,20 @@ export default function App() {
       doctors[index] = { ...doctors[index], [field]: value };
       return { ...s, doctors };
     });
+  };
+
+  const addDoctor = () => {
+    setState(s => ({
+      ...s,
+      doctors: [...s.doctors, { role: '', name: '' }],
+    }));
+  };
+
+  const removeDoctor = (index: number) => {
+    setState(s => ({
+      ...s,
+      doctors: s.doctors.filter((_, i) => i !== index),
+    }));
   };
 
   const updateComorbidity = (key: keyof FormState['comorbidities'], data: Comorbidity) => {
@@ -243,40 +258,29 @@ export default function App() {
               <Field label="GCS" wide><Input id="gcs" placeholder="e.g. 15/15" value={state.gcs} onChange={e => update('gcs', e.target.value)} /></Field>
             </div>
 
-            <SectionTitle>Past history</SectionTitle>
-            <div className="grid grid-cols-1 gap-3 px-1 pb-4">
-              <Field label="">
-                <Switch 
-                  id="noKnownSystemicHx"
-                  label="No known history of DM, HTN, Asthma, Epilepsy, Thyroid disease or TB" 
-                  checked={state.noKnownSystemicHx} 
-                  onChange={(checked) => {
-                    update('noKnownSystemicHx', checked);
-                    if (checked) {
-                      setState(s => ({
-                        ...s,
-                        comorbidities: {
-                          dm: { ...initialComorbidity }, htn: { ...initialComorbidity },
-                          asthma: { ...initialComorbidity }, epilepsy: { ...initialComorbidity },
-                          thyroid: { ...initialComorbidity }, tb: { ...initialComorbidity }
-                        }
-                      }));
-                    }
-                  }} 
-                />
-              </Field>
-              
-              <ComorbidityField label="Diabetes Mellitus" data={state.comorbidities.dm} onChange={d => updateComorbidity('dm', d)} disabled={state.noKnownSystemicHx} />
-              <ComorbidityField label="Hypertension (HTN)" data={state.comorbidities.htn} onChange={d => updateComorbidity('htn', d)} disabled={state.noKnownSystemicHx} />
-              <ComorbidityField label="Asthma" data={state.comorbidities.asthma} onChange={d => updateComorbidity('asthma', d)} disabled={state.noKnownSystemicHx} />
-              <ComorbidityField label="Epilepsy" data={state.comorbidities.epilepsy} onChange={d => updateComorbidity('epilepsy', d)} disabled={state.noKnownSystemicHx} />
-              <ComorbidityField label="Thyroid disease" data={state.comorbidities.thyroid} onChange={d => updateComorbidity('thyroid', d)} disabled={state.noKnownSystemicHx} />
-              <ComorbidityField label="Tuberculosis (TB)" data={state.comorbidities.tb} onChange={d => updateComorbidity('tb', d)} disabled={state.noKnownSystemicHx} />
-
-              <Field label="Other past history / known allergies to medicines">
-                <Textarea id="pastHx" placeholder="e.g. No known drug allergies." value={state.pastHx} onChange={e => update('pastHx', e.target.value)} />
-              </Field>
-            </div>
+            <PastHistorySection
+              noKnownSystemicHx={state.noKnownSystemicHx}
+              comorbidities={state.comorbidities}
+              pastHx={state.pastHx}
+              onUpdateNoKnown={(checked) => {
+                update('noKnownSystemicHx', checked);
+                if (checked) {
+                  setState(s => ({
+                    ...s,
+                    comorbidities: {
+                      dm: { ...initialComorbidity },
+                      htn: { ...initialComorbidity },
+                      asthma: { ...initialComorbidity },
+                      epilepsy: { ...initialComorbidity },
+                      thyroid: { ...initialComorbidity },
+                      tb: { ...initialComorbidity },
+                    },
+                  }));
+                }
+              }}
+              onUpdateComorbidity={updateComorbidity}
+              onUpdatePastHx={(val) => update('pastHx', val)}
+            />
 
             <SectionTitle>Triage & consultation</SectionTitle>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-1 pb-4">
@@ -309,24 +313,15 @@ export default function App() {
                   <Input id="consultDeptOther" className="mt-2" placeholder="Type department name" value={state.consultDeptOther} onChange={e => update('consultDeptOther', e.target.value)} />
                 )}
               </Field>
-              <Field label="Doctor name(s) — designation" wide>
-                <div className="grid gap-2">
-                  {state.doctors.map((doc, idx) => (
-                    <div key={idx} className="grid grid-cols-1 sm:grid-cols-[150px_1fr] gap-2">
-                      <Select value={doc.role} onChange={e => updateDoctor(idx, 'role', e.target.value)}>
-                        <option value="">Select designation</option>
-                        <option value="DMO">DMO</option>
-                        <option value="DSO">DSO</option>
-                        <option value="JR2">JR2</option>
-                        <option value="JR1">JR1</option>
-                      </Select>
-                      <Input placeholder={`Doctor name${idx > 0 ? ' (optional)' : ''}`} value={doc.name} onChange={e => updateDoctor(idx, 'name', e.target.value)} />
-                    </div>
-                  ))}
-                </div>
-              </Field>
               <Field label="Consultation call — time"><Input id="consultTime" type="time" value={state.consultTime} onChange={e => update('consultTime', e.target.value)} /></Field>
             </div>
+
+            <DoctorsSection
+              doctors={state.doctors}
+              onUpdateDoctor={updateDoctor}
+              onAddDoctor={addDoctor}
+              onRemoveDoctor={removeDoctor}
+            />
 
             <SectionTitle>Workup & treatment</SectionTitle>
             <div className="grid grid-cols-1 gap-3 px-1 pb-4">

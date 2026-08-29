@@ -99,10 +99,7 @@ export const initialState: FormState = {
   pastHx: '',
   triage: '', consultDept: '', consultDeptOther: '',
   doctors: [
-    { role: '', name: '' },
-    { role: '', name: '' },
-    { role: '', name: '' },
-    { role: '', name: '' },
+    { role: '', name: '' }
   ],
   consultTime: '',
   invx: '', tx: '', diagnosis: '',
