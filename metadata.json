@@ -1,6 +1,6 @@
 {
   "name": "New Case Alert",
-  "description": "case documentation and New Case Alert (NCA) m,
+  "description": "case documentation and New Case Alert (NCA) message generator.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

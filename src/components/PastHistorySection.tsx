@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { FormState, Comorbidity } from '../types';
-import { Field, Input, Select, Switch, Textarea } from './ui';
-import { ChevronDown, ChevronUp, Check, Plus, X } from 'lucide-react';
+import { Field, Switch, Textarea } from './ui';
+import { ComorbidityField } from './ComorbidityField';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface PastHistorySectionProps {
   noKnownSystemicHx: boolean;
@@ -13,7 +14,7 @@ interface PastHistorySectionProps {
 }
 
 export const COMORBIDITY_OPTIONS = [
-  { key: 'dm', label: 'Diabetes Mellitus' },
+  { key: 'dm', label: 'Diabetes Mellitus (DM)' },
   { key: 'htn', label: 'Hypertension (HTN)' },
   { key: 'asthma', label: 'Asthma' },
   { key: 'epilepsy', label: 'Epilepsy' },
@@ -36,18 +37,11 @@ export function PastHistorySection({
   );
   const selectedCount = selectedConditions.length;
 
-  const toggleCondition = (key: keyof FormState['comorbidities']) => {
-    const current = comorbidities[key];
-    const nextKnown = !current.known;
-
-    if (nextKnown && noKnownSystemicHx) {
+  const handleComorbidityChange = (key: keyof FormState['comorbidities'], data: Comorbidity) => {
+    if (data.known && noKnownSystemicHx) {
       onUpdateNoKnown(false);
     }
-
-    onUpdateComorbidity(key, {
-      ...current,
-      known: nextKnown,
-    });
+    onUpdateComorbidity(key, data);
   };
 
   return (
@@ -58,7 +52,7 @@ export function PastHistorySection({
         id="pastHistoryToggle"
         onClick={() => setIsOpen(prev => !prev)}
         aria-expanded={isOpen}
-        className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left group hover:bg-[#162724]/40 transition-colors rounded-lg"
+        className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left group hover:bg-er-teal-soft/60 transition-colors rounded-lg"
       >
         <div className="flex items-center gap-2">
           <div className="w-1 h-[13px] rounded-full bg-er-teal" />
@@ -69,20 +63,20 @@ export function PastHistorySection({
 
         <div className="flex items-center gap-2">
           {noKnownSystemicHx ? (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-[#173a34] text-[#7ee3d4] border border-[#2f665c]">
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-[#0f3c36] text-[#5eead4] border border-[#14b8a6]">
               No known systemic hx
             </span>
           ) : selectedCount > 0 ? (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-[#17443e] text-[#dffff8] border border-[#4e9d91]">
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-[#0f3c36] text-[#5eead4] border border-[#14b8a6]">
               {selectedCount} selected
             </span>
           ) : (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-medium bg-[#1a2c29] text-er-ink-soft border border-er-line">
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-medium bg-[#141f24] text-er-ink-soft border border-er-line">
               0 selected
             </span>
           )}
 
-          <div className="w-5 h-5 flex items-center justify-center rounded bg-[#182b28] text-er-ink-soft group-hover:text-er-ink transition-colors border border-er-line">
+          <div className="w-5 h-5 flex items-center justify-center rounded bg-[#141f24] text-er-ink-soft group-hover:text-er-ink transition-colors border border-er-line">
             {isOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
           </div>
         </div>
@@ -90,7 +84,7 @@ export function PastHistorySection({
 
       {/* Expandable Content Area */}
       {isOpen && (
-        <div className="grid grid-cols-1 gap-2 px-3 pb-3 pt-0.5">
+        <div className="grid grid-cols-1 gap-3 px-3 pb-3 pt-1">
           {/* Master switch */}
           <Field label="">
             <Switch
@@ -101,121 +95,25 @@ export function PastHistorySection({
             />
           </Field>
 
-          {/* Condition Chips */}
-          <div className="flex flex-wrap gap-1.5">
-            {COMORBIDITY_OPTIONS.map(({ key, label }) => {
-              const isSelected = comorbidities[key]?.known;
-              const isDisabled = noKnownSystemicHx;
-
-              return (
-                <button
-                  key={key}
-                  id={`chip-${key}`}
-                  type="button"
-                  disabled={isDisabled}
-                  onClick={() => toggleCondition(key)}
-                  className={`inline-flex items-center gap-1 px-2 py-1 rounded text-[11px] font-semibold transition-all select-none ${
-                    isDisabled
-                      ? 'opacity-40 cursor-not-allowed bg-[#182a27] text-er-ink-soft border border-er-line/50'
-                      : isSelected
-                      ? 'bg-[#17443e] text-[#dffff8] border border-[#4e9d91] shadow-xs'
-                      : 'bg-[#182a27] text-er-ink-soft border border-er-line hover:bg-[#213834] hover:text-er-ink'
-                  }`}
-                >
-                  {isSelected ? (
-                    <Check size={11} className="text-[#6ee0d0] flex-none" />
-                  ) : (
-                    <Plus size={11} className="text-er-ink-soft/60 flex-none" />
-                  )}
-                  <span>{label}</span>
-                </button>
-              );
-            })}
+          {/* Comorbidity fields */}
+          <div className="grid grid-cols-1 gap-3">
+            {COMORBIDITY_OPTIONS.map(({ key, label }) => (
+              <ComorbidityField
+                key={key}
+                id={`comorbidity-${key}`}
+                label={label}
+                data={comorbidities[key]}
+                onChange={(data) => handleComorbidityChange(key, data)}
+                disabled={noKnownSystemicHx}
+              />
+            ))}
           </div>
-
-          {/* Detailed fields for selected conditions */}
-          {selectedConditions.length > 0 && (
-            <div className="flex flex-col gap-1.5 mt-0.5">
-              {selectedConditions.map(({ key, label }) => {
-                const data = comorbidities[key];
-
-                return (
-                  <div
-                    key={key}
-                    className="p-2 border border-er-line rounded bg-[#142623]/60 flex flex-col gap-1.5"
-                  >
-                    <div className="flex items-center justify-between border-b border-er-line/40 pb-1">
-                      <span className="text-[11px] font-bold text-[#bbf7ef] flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#6ee0d0]" />
-                        {label}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => toggleCondition(key)}
-                        className="inline-flex items-center gap-0.5 text-[9.5px] font-medium text-er-ink-soft hover:text-[#ff8f87] transition-colors px-1 py-0.5 rounded hover:bg-white/5"
-                        title={`Remove ${label}`}
-                      >
-                        <X size={10} />
-                        <span>Remove</span>
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <Field label="Since">
-                        <Input
-                          id={`${key}-since`}
-                          placeholder="e.g. 5 yrs / 2020"
-                          value={data.since}
-                          onChange={e =>
-                            onUpdateComorbidity(key, { ...data, since: e.target.value })
-                          }
-                        />
-                      </Field>
-
-                      <Field label="On regular medication?">
-                        <Select
-                          id={`${key}-meds`}
-                          value={data.meds}
-                          onChange={e =>
-                            onUpdateComorbidity(key, {
-                              ...data,
-                              meds: e.target.value as Comorbidity['meds'],
-                            })
-                          }
-                        >
-                          <option value="">Select</option>
-                          <option value="Yes">Yes</option>
-                          <option value="No">No</option>
-                        </Select>
-                      </Field>
-
-                      {data.meds === 'Yes' && (
-                        <Field label="Medication" wide>
-                          <Input
-                            id={`${key}-medicationName`}
-                            placeholder="Medication name"
-                            value={data.medicationName}
-                            onChange={e =>
-                              onUpdateComorbidity(key, {
-                                ...data,
-                                medicationName: e.target.value,
-                              })
-                            }
-                          />
-                        </Field>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
 
           {/* Other past history / known allergies */}
           <Field label="Other past history / allergies">
             <Textarea
               id="pastHx"
-              className="min-h-[44px]"
+              className="min-h-[64px]"
               placeholder="e.g. No known drug allergies."
               value={pastHx}
               onChange={e => onUpdatePastHx(e.target.value)}

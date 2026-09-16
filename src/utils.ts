@@ -128,12 +128,11 @@ export function buildMessage(s: FormState, interactive: boolean = false): string
 *OCCUPATION*- ${w(s.occ, 'occ')}
 
 *PRESENTING COMPLAINTS*
-${complaintsBold ? w(complaintsBold, 'complaints') : w('-', 'complaints')}
+${complaintsBold ? w(complaintsBold, 'complaints') : `*1).* ${w('-', 'complaints')}`}
 
 
 
-*BRIEF HISTORY Leading to the Mentioned Presenting Complaints (Cause of Current illness / Condition)*-
-${w(s.history, 'history')}
+*BRIEF HISTORY Leading to the Mentioned Presenting Complaints (Cause of Current illness / Condition)*- ${w(s.history, 'history')}
 
 
 
@@ -149,7 +148,7 @@ ${w(s.history, 'history')}
 
 
 
-*PAST HISTORY ( Any Systemic Diseases and Regular Medication Details / Any Known Allergies to Medicines)*:
+*PAST HISTORY ( Any Systemic Diseases and Regular Medication Details / Any Known Allergies to Medicines):*
 ${w(pastHistoryText, 'noKnownSystemicHx')}
 
 

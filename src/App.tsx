@@ -14,7 +14,7 @@ const InteractivePreview = ({ content, onNavigate }: { content: string, onNaviga
     const chunks = str.split(/\*([\s\S]*?)\*/g);
     return chunks.map((chunk, i) => 
       i % 2 === 1 
-        ? <strong key={i} className="text-er-teal-400 font-extrabold">{chunk}</strong> 
+        ? <strong key={i} className="text-er-teal font-extrabold">{chunk}</strong> 
         : chunk
     );
   };
@@ -39,7 +39,7 @@ const InteractivePreview = ({ content, onNavigate }: { content: string, onNaviga
                   el.focus({ preventScroll: true });
                 }
               }}
-              className="cursor-pointer hover:bg-[#63d0c2]/20 hover:text-white transition-colors rounded px-1 -mx-1"
+              className="cursor-pointer hover:bg-er-teal/20 hover:text-white transition-colors rounded px-1 -mx-1"
               title="Click to edit"
             >
               {renderText(value)}
@@ -120,7 +120,7 @@ export default function App() {
           </div>
           <button
             onClick={() => setIsPreNcaOpen(true)}
-            className="flex-none mt-1 px-3 py-2 bg-er-panel text-er-ink border border-er-line rounded-lg font-bold text-xs shadow-sm hover:bg-[#18302c] hover:border-[#45645e] transition-colors"
+            className="flex-none mt-1 px-3 py-2 bg-er-panel text-er-ink border border-er-line rounded-lg font-bold text-xs shadow-sm hover:bg-[#18262d] hover:border-[#324a54] transition-colors"
           >
             🚨 Pre-NCA
           </button>
@@ -129,7 +129,7 @@ export default function App() {
 
       {/* Pre-NCA Drawer Backdrop */}
       <div 
-        className={`fixed inset-0 z-50 bg-[#081e1c]/60 backdrop-blur-sm transition-opacity duration-200 ${isPreNcaOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 z-50 bg-[#061014]/75 backdrop-blur-sm transition-opacity duration-200 ${isPreNcaOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={() => setIsPreNcaOpen(false)}
       />
 
@@ -137,35 +137,35 @@ export default function App() {
       <aside 
         className={`fixed top-0 right-0 bottom-0 z-[51] w-full max-w-[560px] bg-er-bg shadow-2xl overflow-y-auto transition-transform duration-300 ${isPreNcaOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-4 bg-[#061512] border-b border-er-line text-white">
+        <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-4 bg-[#0a1216] border-b border-er-line text-er-ink">
           <div>
             <div className="text-[15px] font-extrabold">🚨 Pre-NCA</div>
-            <div className="text-[10.5px] text-[#c9ddda] mt-0.5">Quick pre-NCA notification</div>
+            <div className="text-[10.5px] text-er-ink-soft mt-0.5">Quick pre-NCA notification</div>
           </div>
           <button 
             onClick={() => setIsPreNcaOpen(false)}
-            className="flex items-center justify-center w-9 h-9 rounded-lg border border-er-line/50 bg-white/10 hover:bg-white/20 transition-colors"
+            className="flex items-center justify-center w-9 h-9 rounded-lg border border-er-line/70 bg-white/5 hover:bg-white/10 text-er-ink transition-colors"
           >
             <X size={20} />
           </button>
         </div>
 
         <div className="p-4 sm:p-2">
-          <div className="bg-[#13211f] border border-er-line rounded-xl overflow-hidden shadow-lg">
-            <div className="flex items-center justify-between px-4 py-3.5 bg-[#182b28] border-b border-er-line">
+          <div className="bg-er-panel border border-er-line rounded-xl overflow-hidden shadow-lg">
+            <div className="flex items-center justify-between px-4 py-3.5 bg-[#0d161a] border-b border-er-line">
               <div>
-                <div className="text-[15px] font-black text-white">🚨 Pre-NCA</div>
+                <div className="text-[15px] font-black text-er-ink">🚨 Pre-NCA</div>
               </div>
               <button
                 onClick={() => copyPre(preNcaOutput)}
-                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border transition-colors ${copiedPre ? 'bg-[#17443e] text-[#dffff8] border-[#4e9d91]' : 'bg-[#263b37] text-[#eaf5f2] border-[#49635e] hover:bg-[#304a45] hover:border-[#63817a]'}`}
+                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border transition-colors ${copiedPre ? 'bg-[#0f3c36] text-[#5eead4] border-[#14b8a6]' : 'bg-[#18292f] text-[#e0eff0] border-[#2e4751] hover:bg-[#20373f] hover:border-[#3d5e6c]'}`}
               >
                 <Copy size={14} />
                 {copiedPre ? 'Copied ✓' : 'Copy'}
               </button>
             </div>
 
-            <div className="p-4 sm:p-3 bg-[#13211f]">
+            <div className="p-4 sm:p-3 bg-er-panel">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 <Field label="SL. No."><Input id="preNcaSl" inputMode="numeric" placeholder="e.g. 6" value={state.preNcaSl} onChange={e => update('preNcaSl', e.target.value)} /></Field>
                 <Field label="Receiving time"><Input id="preNcaTime" type="time" value={state.preNcaTime} onChange={e => update('preNcaTime', e.target.value)} /></Field>
@@ -189,9 +189,9 @@ export default function App() {
               </div>
             </div>
 
-            <div className="border-t border-[#35504b] bg-[#0b1614]">
-              <div className="px-4 py-2.5 text-[10px] font-extrabold tracking-widest text-[#6ee0d0] uppercase">PRE-NCA MESSAGE</div>
-              <div className="px-4 pb-4 text-xs font-mono text-white whitespace-pre-wrap leading-relaxed">
+            <div className="border-t border-er-line bg-[#091013]">
+              <div className="px-4 py-2.5 text-[10px] font-extrabold tracking-widest text-er-teal uppercase">PRE-NCA MESSAGE</div>
+              <div className="px-4 pb-4 text-xs font-mono text-er-ink whitespace-pre-wrap leading-relaxed">
                 <InteractivePreview content={preNcaInteractive} onNavigate={() => setIsPreNcaOpen(false)} />
               </div>
             </div>
@@ -300,13 +300,10 @@ export default function App() {
                 }}>
                   <option value="">Select department</option>
                   <option value="Department of General Medicine">Department of General Medicine</option>
-                  <option value="Department of Paediatrics">Department of Paediatrics</option>
-                  <option value="Department of Respiratory Medicine">Department of Respiratory Medicine</option>
                   <option value="Department of General Surgery">Department of General Surgery</option>
-                  <option value="Department of Orthopaedics">Department of Orthopaedics</option>
-                  <option value="Department of Otorhinolaryngology (ENT)">Department of Otorhinolaryngology (ENT)</option>
-                  <option value="Department of Ophthalmology">Department of Ophthalmology</option>
-                  <option value="Department of Obstetrics & Gynaecology">Department of Obstetrics & Gynaecology</option>
+                  <option value="Department of Orthopaedics">Department of Orthopaedics </option>
+                  <option value="Department of Respiratory Medicine">Department of Respiratory Medicine</option>
+                  <option value="Department of ENT">Department of ENT </option>
                   <option value="__other__">Other (type below)</option>
                 </Select>
                 {state.consultDept === '__other__' && (
@@ -341,18 +338,18 @@ export default function App() {
 
         {/* Output Panel */}
         <div className="flex flex-col h-full bg-er-panel border border-er-line rounded-[14px] shadow-lg sm:rounded-xl">
-          <div className="flex items-center justify-between gap-3 px-4 py-3 bg-[#071d1a] text-[#eef8f6] border-b border-er-line">
+          <div className="flex items-center justify-between gap-3 px-4 py-3 bg-[#0d161a] text-er-ink border-b border-er-line">
             <h2 className="m-0 text-xs font-extrabold tracking-widest uppercase">Formatted message</h2>
             <div className="flex gap-2">
               <button 
                 onClick={handleReset}
-                className="hidden sm:block px-3 py-2 text-xs font-bold rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 transition-colors"
+                className="hidden sm:block px-3 py-2 text-xs font-bold rounded-lg border border-er-line bg-[#18292f] text-er-ink-soft hover:text-er-ink hover:bg-[#20373f] hover:border-[#3d5e6c] transition-colors"
               >
                 Reset
               </button>
               <button
                 onClick={() => copyMain(messageOutput)}
-                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border shadow-sm transition-colors ${copiedMain ? 'bg-[#17443e] text-[#dffff8] border-[#4e9d91]' : 'bg-[#263b37] text-[#eaf5f2] border-[#49635e] hover:bg-[#304a45] hover:border-[#63817a]'}`}
+                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border shadow-sm transition-colors ${copiedMain ? 'bg-[#0f3c36] text-[#5eead4] border-[#14b8a6]' : 'bg-[#18292f] text-[#e0eff0] border-[#2e4751] hover:bg-[#20373f] hover:border-[#3d5e6c]'}`}
               >
                 <Copy size={14} />
                 {copiedMain ? 'Copied ✓' : 'Copy'}
@@ -360,10 +357,10 @@ export default function App() {
             </div>
           </div>
           <div className="px-4 pt-3 text-[10.5px] text-er-ink-soft leading-snug flex items-start gap-1.5">
-            <AlertCircle size={14} className="flex-none mt-0.5 opacity-70" />
+            <AlertCircle size={14} className="flex-none mt-0.5 text-er-teal/70" />
             Click on any value below to jump directly to its input field.
           </div>
-          <div className="p-4 pb-8 text-xs font-mono text-white whitespace-pre-wrap leading-relaxed">
+          <div className="p-4 pb-8 text-xs font-mono text-er-ink whitespace-pre-wrap leading-relaxed">
             <InteractivePreview content={messageInteractive} />
           </div>
         </div>
