@@ -24,7 +24,7 @@ export function ComorbidityField({ id, label, help, data, onChange, disabled }: 
       />
       
       {data.known && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2 p-3 border border-er-line rounded-xl bg-[#0d161a]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2 p-3 border border-er-line rounded-xl bg-[#0a0a0a]">
           <Field label="Since">
             <Input 
               id={id ? `${id}-since` : undefined}

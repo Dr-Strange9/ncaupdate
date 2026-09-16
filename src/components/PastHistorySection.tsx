@@ -71,12 +71,12 @@ export function PastHistorySection({
               {selectedCount} selected
             </span>
           ) : (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-medium bg-[#141f24] text-er-ink-soft border border-er-line">
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-medium bg-[#141414] text-er-ink-soft border border-er-line">
               0 selected
             </span>
           )}
 
-          <div className="w-5 h-5 flex items-center justify-center rounded bg-[#141f24] text-er-ink-soft group-hover:text-er-ink transition-colors border border-er-line">
+          <div className="w-5 h-5 flex items-center justify-center rounded bg-[#141414] text-er-ink-soft group-hover:text-er-ink transition-colors border border-er-line">
             {isOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
           </div>
         </div>

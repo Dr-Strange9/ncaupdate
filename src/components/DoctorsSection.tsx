@@ -48,12 +48,12 @@ export function DoctorsSection({
               {activeCount} {activeCount === 1 ? 'doc' : 'docs'}
             </span>
           ) : (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-medium bg-[#141f24] text-er-ink-soft border border-er-line">
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-medium bg-[#141414] text-er-ink-soft border border-er-line">
               0
             </span>
           )}
 
-          <div className="w-5 h-5 flex items-center justify-center rounded bg-[#141f24] text-er-ink-soft group-hover:text-er-ink transition-colors border border-er-line">
+          <div className="w-5 h-5 flex items-center justify-center rounded bg-[#141414] text-er-ink-soft group-hover:text-er-ink transition-colors border border-er-line">
             {isOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
           </div>
         </div>
@@ -65,7 +65,7 @@ export function DoctorsSection({
           {doctors.map((doc, idx) => (
             <div
               key={idx}
-              className="p-2.5 border border-er-line rounded-lg bg-[#0d161a] flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
+              className="p-2.5 border border-er-line rounded-lg bg-[#0a0a0a] flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
             >
               <div className="w-full sm:w-[130px] flex-none">
                 <Select
@@ -108,7 +108,7 @@ export function DoctorsSection({
             type="button"
             id="addDoctorBtn"
             onClick={onAddDoctor}
-            className="flex items-center justify-center gap-1.5 py-1.5 px-3 bg-[#122026] text-er-teal border border-dashed border-er-line rounded-lg font-bold text-xs hover:bg-[#172a32] hover:border-er-teal transition-all cursor-pointer"
+            className="flex items-center justify-center gap-1.5 py-1.5 px-3 bg-[#101010] text-er-teal border border-dashed border-er-line rounded-lg font-bold text-xs hover:bg-[#181818] hover:border-er-teal transition-all cursor-pointer"
           >
             <UserPlus size={13} />
             <span>+ Add doctor</span>

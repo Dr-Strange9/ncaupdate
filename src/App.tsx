@@ -120,7 +120,7 @@ export default function App() {
           </div>
           <button
             onClick={() => setIsPreNcaOpen(true)}
-            className="flex-none mt-1 px-3 py-2 bg-er-panel text-er-ink border border-er-line rounded-lg font-bold text-xs shadow-sm hover:bg-[#18262d] hover:border-[#324a54] transition-colors"
+            className="flex-none mt-1 px-3 py-2 bg-er-panel text-er-ink border border-er-line rounded-lg font-bold text-xs shadow-sm hover:bg-[#181818] hover:border-[#333333] transition-colors"
           >
             🚨 Pre-NCA
           </button>
@@ -129,7 +129,7 @@ export default function App() {
 
       {/* Pre-NCA Drawer Backdrop */}
       <div 
-        className={`fixed inset-0 z-50 bg-[#061014]/75 backdrop-blur-sm transition-opacity duration-200 ${isPreNcaOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 z-50 bg-black/80 backdrop-blur-sm transition-opacity duration-200 ${isPreNcaOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={() => setIsPreNcaOpen(false)}
       />
 
@@ -137,7 +137,7 @@ export default function App() {
       <aside 
         className={`fixed top-0 right-0 bottom-0 z-[51] w-full max-w-[560px] bg-er-bg shadow-2xl overflow-y-auto transition-transform duration-300 ${isPreNcaOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-4 bg-[#0a1216] border-b border-er-line text-er-ink">
+        <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-4 bg-[#0a0a0a] border-b border-er-line text-er-ink">
           <div>
             <div className="text-[15px] font-extrabold">🚨 Pre-NCA</div>
             <div className="text-[10.5px] text-er-ink-soft mt-0.5">Quick pre-NCA notification</div>
@@ -152,13 +152,13 @@ export default function App() {
 
         <div className="p-4 sm:p-2">
           <div className="bg-er-panel border border-er-line rounded-xl overflow-hidden shadow-lg">
-            <div className="flex items-center justify-between px-4 py-3.5 bg-[#0d161a] border-b border-er-line">
+            <div className="flex items-center justify-between px-4 py-3.5 bg-[#0a0a0a] border-b border-er-line">
               <div>
                 <div className="text-[15px] font-black text-er-ink">🚨 Pre-NCA</div>
               </div>
               <button
                 onClick={() => copyPre(preNcaOutput)}
-                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border transition-colors ${copiedPre ? 'bg-[#0f3c36] text-[#5eead4] border-[#14b8a6]' : 'bg-[#18292f] text-[#e0eff0] border-[#2e4751] hover:bg-[#20373f] hover:border-[#3d5e6c]'}`}
+                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border transition-colors ${copiedPre ? 'bg-[#0f3c36] text-[#5eead4] border-[#14b8a6]' : 'bg-[#141414] text-er-ink border-[#262626] hover:bg-[#202020] hover:border-[#383838]'}`}
               >
                 <Copy size={14} />
                 {copiedPre ? 'Copied ✓' : 'Copy'}
@@ -189,7 +189,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="border-t border-er-line bg-[#091013]">
+            <div className="border-t border-er-line bg-[#050505]">
               <div className="px-4 py-2.5 text-[10px] font-extrabold tracking-widest text-er-teal uppercase">PRE-NCA MESSAGE</div>
               <div className="px-4 pb-4 text-xs font-mono text-er-ink whitespace-pre-wrap leading-relaxed">
                 <InteractivePreview content={preNcaInteractive} onNavigate={() => setIsPreNcaOpen(false)} />
@@ -322,8 +322,8 @@ export default function App() {
 
             <SectionTitle>Workup & treatment</SectionTitle>
             <div className="grid grid-cols-1 gap-3 px-1 pb-4">
-              <Field label="Investigations advised"><Textarea id="invx" className="min-h-[100px]" placeholder="e.g. CBP, RFT, LFT, USG abdomen" value={state.invx} onChange={e => update('invx', e.target.value)} /></Field>
-              <Field label="Treatment initiated in ER"><Textarea id="tx" className="min-h-[100px]" placeholder="e.g. IVF NS started, Inj. Pantop IV stat" value={state.tx} onChange={e => update('tx', e.target.value)} /></Field>
+              <Field label="Investigations advised"><Textarea id="invx" rows={6} className="min-h-[165px]" placeholder="e.g. CBP, RFT, LFT, USG abdomen" value={state.invx} onChange={e => update('invx', e.target.value)} /></Field>
+              <Field label="Treatment initiated in ER"><Textarea id="tx" rows={6} className="min-h-[165px]" placeholder="e.g. IVF NS started, Inj. Pantop IV stat" value={state.tx} onChange={e => update('tx', e.target.value)} /></Field>
               <Field label="Provisional / final diagnosis"><Textarea id="diagnosis" placeholder="e.g. ? Acute appendicitis" value={state.diagnosis} onChange={e => update('diagnosis', e.target.value)} /></Field>
             </div>
 
@@ -338,18 +338,18 @@ export default function App() {
 
         {/* Output Panel */}
         <div className="flex flex-col h-full bg-er-panel border border-er-line rounded-[14px] shadow-lg sm:rounded-xl">
-          <div className="flex items-center justify-between gap-3 px-4 py-3 bg-[#0d161a] text-er-ink border-b border-er-line">
+          <div className="flex items-center justify-between gap-3 px-4 py-3 bg-[#0a0a0a] text-er-ink border-b border-er-line">
             <h2 className="m-0 text-xs font-extrabold tracking-widest uppercase">Formatted message</h2>
             <div className="flex gap-2">
               <button 
                 onClick={handleReset}
-                className="hidden sm:block px-3 py-2 text-xs font-bold rounded-lg border border-er-line bg-[#18292f] text-er-ink-soft hover:text-er-ink hover:bg-[#20373f] hover:border-[#3d5e6c] transition-colors"
+                className="hidden sm:block px-3 py-2 text-xs font-bold rounded-lg border border-er-line bg-[#141414] text-er-ink-soft hover:text-er-ink hover:bg-[#202020] hover:border-[#383838] transition-colors"
               >
                 Reset
               </button>
               <button
                 onClick={() => copyMain(messageOutput)}
-                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border shadow-sm transition-colors ${copiedMain ? 'bg-[#0f3c36] text-[#5eead4] border-[#14b8a6]' : 'bg-[#18292f] text-[#e0eff0] border-[#2e4751] hover:bg-[#20373f] hover:border-[#3d5e6c]'}`}
+                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border shadow-sm transition-colors ${copiedMain ? 'bg-[#0f3c36] text-[#5eead4] border-[#14b8a6]' : 'bg-[#141414] text-er-ink border-[#262626] hover:bg-[#202020] hover:border-[#383838]'}`}
               >
                 <Copy size={14} />
                 {copiedMain ? 'Copied ✓' : 'Copy'}

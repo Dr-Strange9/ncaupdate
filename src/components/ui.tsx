@@ -14,7 +14,7 @@ type InputProps = React.ComponentProps<'input'>;
 export function Input({ className = '', ...props }: InputProps) {
   return (
     <input
-      className={`w-full min-h-[40px] px-3 py-2 bg-[#141f24] text-er-ink border border-er-line rounded-lg text-[13px] font-medium outline-none transition-all placeholder:text-[#67808b] hover:border-[#324a54] focus:border-er-teal focus:bg-[#0f171b] focus:ring-4 focus:ring-er-teal/15 ${className}`}
+      className={`w-full min-h-[40px] px-3 py-2 bg-[#121212] text-er-ink border border-er-line rounded-lg text-[13px] font-medium outline-none transition-all placeholder:text-[#555555] hover:border-[#333333] focus:border-er-teal focus:bg-[#0a0a0a] focus:ring-4 focus:ring-er-teal/15 ${className}`}
       {...props}
     />
   );
@@ -25,7 +25,7 @@ type TextareaProps = React.ComponentProps<'textarea'>;
 export function Textarea({ className = '', ...props }: TextareaProps) {
   return (
     <textarea
-      className={`w-full min-h-[72px] px-3 py-2 bg-[#141f24] text-er-ink border border-er-line rounded-lg text-[13px] font-medium outline-none transition-all resize-y placeholder:text-[#67808b] hover:border-[#324a54] focus:border-er-teal focus:bg-[#0f171b] focus:ring-4 focus:ring-er-teal/15 ${className}`}
+      className={`w-full min-h-[72px] px-3 py-2 bg-[#121212] text-er-ink border border-er-line rounded-lg text-[13px] font-medium outline-none transition-all resize-y placeholder:text-[#555555] hover:border-[#333333] focus:border-er-teal focus:bg-[#0a0a0a] focus:ring-4 focus:ring-er-teal/15 ${className}`}
       {...props}
     />
   );
@@ -36,7 +36,7 @@ type SelectProps = React.ComponentProps<'select'>;
 export function Select({ className = '', children, ...props }: SelectProps) {
   return (
     <select
-      className={`w-full min-h-[40px] px-3 py-2 bg-[#141f24] text-er-ink border border-er-line rounded-lg text-[13px] font-medium outline-none transition-all hover:border-[#324a54] focus:border-er-teal focus:bg-[#0f171b] focus:ring-4 focus:ring-er-teal/15 ${className}`}
+      className={`w-full min-h-[40px] px-3 py-2 bg-[#121212] text-er-ink border border-er-line rounded-lg text-[13px] font-medium outline-none transition-all hover:border-[#333333] focus:border-er-teal focus:bg-[#0a0a0a] focus:ring-4 focus:ring-er-teal/15 ${className}`}
       {...props}
     >
       {children}
@@ -54,7 +54,7 @@ interface SwitchProps {
 
 export function Switch({ id, checked, onChange, label, help }: SwitchProps) {
   return (
-    <div className="flex items-center justify-between gap-3 p-3 border border-er-line rounded-xl bg-er-teal-soft">
+    <div className="flex items-center justify-between gap-3 p-3 border border-er-line rounded-xl bg-[#0f0f0f]">
       <div>
         <label className="block text-[11px] font-extrabold text-er-ink cursor-pointer" onClick={() => onChange(!checked)}>
           {label}
@@ -67,7 +67,7 @@ export function Switch({ id, checked, onChange, label, help }: SwitchProps) {
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className={`relative flex-none w-11 h-[26px] rounded-full transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-er-teal/20 ${checked ? 'bg-er-teal' : 'bg-[#2b3c43]'}`}
+        className={`relative flex-none w-11 h-[26px] rounded-full transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-er-teal/20 ${checked ? 'bg-er-teal' : 'bg-[#262626]'}`}
       >
         <span
           className={`absolute left-[3px] top-[3px] w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${checked ? 'translate-x-5' : 'translate-x-0'}`}
