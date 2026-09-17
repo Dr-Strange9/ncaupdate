@@ -1,10 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { FormState, initialState, Doctor, Comorbidity, initialComorbidity } from './types';
-import { Field, Input, Select, Switch, Textarea } from './components/ui';
+import { Field, Input, Select, Textarea } from './components/ui';
 import { PastHistorySection } from './components/PastHistorySection';
 import { DoctorsSection } from './components/DoctorsSection';
+import { FirstRespondentField } from './components/FirstRespondentField';
+import { StandaloneAppButton } from './components/StandaloneAppButton';
 import { buildMessage, buildPreNcaMessage } from './utils';
 import { useClipboard } from './hooks/useClipboard';
+import { useAutoSave } from './hooks/useAutoSave';
 import { AlertCircle, Copy, X } from 'lucide-react';
 
 const InteractivePreview = ({ content, onNavigate }: { content: string, onNavigate?: () => void }) => {
@@ -63,6 +66,8 @@ export default function App() {
   const [state, setState] = useState<FormState>(initialState);
   const [isPreNcaOpen, setIsPreNcaOpen] = useState(false);
 
+  const { saveStatus, clearDraft } = useAutoSave(state, setState);
+
   const { copied: copiedMain, copy: copyMain } = useClipboard();
   const { copied: copiedPre, copy: copyPre } = useClipboard();
 
@@ -100,8 +105,8 @@ export default function App() {
   };
 
   const handleReset = () => {
-    if (window.confirm('Clear all case details?')) {
-      setState(initialState);
+    if (window.confirm('Clear all case details and start a fresh case?')) {
+      clearDraft();
     }
   };
 
@@ -117,10 +122,24 @@ export default function App() {
         <div className="flex items-start justify-between gap-4 sm:items-center">
           <div>
             <h1 className="m-0 mt-1.5 text-3xl font-bold tracking-tight text-er-ink sm:text-2xl">New Case Alert</h1>
+            <div className="flex items-center gap-2 mt-1.5">
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-[#121212] border border-er-line text-er-ink-soft">
+                <span className={`w-1.5 h-1.5 rounded-full ${saveStatus === 'saving' ? 'bg-amber-400 animate-pulse' : 'bg-er-teal'}`} />
+                {saveStatus === 'saving' ? 'Saving draft...' : 'Draft saved'}
+              </span>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="text-[10.5px] text-er-ink-soft hover:text-er-alert transition-colors px-1.5 py-0.5 rounded hover:bg-white/5 cursor-pointer"
+                title="Clear current form and start fresh"
+              >
+                Clear draft
+              </button>
+            </div>
           </div>
           <button
             onClick={() => setIsPreNcaOpen(true)}
-            className="flex-none mt-1 px-3 py-2 bg-er-panel text-er-ink border border-er-line rounded-lg font-bold text-xs shadow-sm hover:bg-[#181818] hover:border-[#333333] transition-colors"
+            className="flex-none mt-1 px-3 py-2 bg-er-panel text-er-ink border border-er-line rounded-lg font-bold text-xs shadow-sm hover:bg-[#181818] hover:border-[#333333] transition-colors cursor-pointer"
           >
             🚨 Pre-NCA
           </button>
@@ -175,16 +194,17 @@ export default function App() {
                 <Field label="Presenting complaints" wide><Textarea id="preNcaComplaints" className="min-h-[60px]" placeholder="Enter presenting complaint(s)" value={state.preNcaComplaints} onChange={e => update('preNcaComplaints', e.target.value)} /></Field>
                 
                 <Field label="First Respondent (FR / Co-FR)" wide>
-                  <div className="grid gap-2">
-                    <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] gap-2">
-                      <Select id="preNcaFrRole" value={state.preNcaFrRole} onChange={e => update('preNcaFrRole', e.target.value)}><option value="FR">FR</option><option value="Co-FR">Co-FR</option></Select>
-                      <Input id="preNcaFrName" placeholder="Enter respondent name" value={state.preNcaFrName} onChange={e => update('preNcaFrName', e.target.value)} />
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] gap-2">
-                      <Select id="preNcaCoFrRole" value={state.preNcaCoFrRole} onChange={e => update('preNcaCoFrRole', e.target.value)}><option value="">No Co-FR</option><option value="Co-FR">Co-FR</option></Select>
-                      <Input id="preNcaCoFrName" placeholder="Enter Co-FR name (optional)" value={state.preNcaCoFrName} onChange={e => update('preNcaCoFrName', e.target.value)} />
-                    </div>
-                  </div>
+                  <FirstRespondentField
+                    idPrefix="preNca"
+                    frRole={state.preNcaFrRole}
+                    frName={state.preNcaFrName}
+                    coFrRole={state.preNcaCoFrRole}
+                    coFrName={state.preNcaCoFrName}
+                    onUpdateFrRole={(val) => update('preNcaFrRole', val)}
+                    onUpdateFrName={(val) => update('preNcaFrName', val)}
+                    onUpdateCoFrRole={(val) => update('preNcaCoFrRole', val)}
+                    onUpdateCoFrName={(val) => update('preNcaCoFrName', val)}
+                  />
                 </Field>
               </div>
             </div>
@@ -214,16 +234,17 @@ export default function App() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-1">
                 <Field label="ER SL. No."><Input id="erSl" inputMode="numeric" placeholder="e.g. 6" value={state.erSl} onChange={e => update('erSl', e.target.value)} /></Field>
                 <Field label="First Respondent (FR / Co-FR)" wide>
-                  <div className="grid gap-2">
-                    <div className="grid grid-cols-1 sm:grid-cols-[150px_1fr] gap-2">
-                      <Select id="frRole" value={state.frRole} onChange={e => update('frRole', e.target.value)}><option value="FR">FR</option><option value="Co-FR">Co-FR</option></Select>
-                      <Input id="frName" placeholder="Enter respondent name" value={state.frName} onChange={e => update('frName', e.target.value)} />
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-[150px_1fr] gap-2">
-                      <Select id="coFrRole" value={state.coFrRole} onChange={e => update('coFrRole', e.target.value)}><option value="">No Co-FR</option><option value="Co-FR">Co-FR</option></Select>
-                      <Input id="coFrName" placeholder="Enter Co-FR name (optional)" value={state.coFrName} onChange={e => update('coFrName', e.target.value)} />
-                    </div>
-                  </div>
+                  <FirstRespondentField
+                    idPrefix="main"
+                    frRole={state.frRole}
+                    frName={state.frName}
+                    coFrRole={state.coFrRole}
+                    coFrName={state.coFrName}
+                    onUpdateFrRole={(val) => update('frRole', val)}
+                    onUpdateFrName={(val) => update('frName', val)}
+                    onUpdateCoFrRole={(val) => update('coFrRole', val)}
+                    onUpdateCoFrName={(val) => update('coFrName', val)}
+                  />
                 </Field>
                 <Field label="Receiving time"><Input id="recvTime" type="time" value={state.recvTime} onChange={e => update('recvTime', e.target.value)} /></Field>
                 <Field label="Bed No."><Input id="bedNo" placeholder="e.g. ER-4" value={state.bedNo} onChange={e => update('bedNo', e.target.value)} /></Field>
@@ -251,7 +272,7 @@ export default function App() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-1 pb-4">
               <Field label="BP"><Input id="bp" placeholder="120/80 mmHg" value={state.bp} onChange={e => update('bp', e.target.value)} /></Field>
               <Field label="PR"><Input id="pr" inputMode="numeric" placeholder="/min" value={state.pr} onChange={e => update('pr', e.target.value)} /></Field>
-              <Field label="SpO2"><Input id="spo2" inputMode="decimal" placeholder="%" value={state.spo2} onChange={e => update('spo2', e.target.value)} /></Field>
+              <Field label="SpO2"><Input id="spo2" inputMode="decimal" placeholder="% @ RA" value={state.spo2} onChange={e => update('spo2', e.target.value)} /></Field>
               <Field label="RR"><Input id="rr" inputMode="numeric" placeholder="/min" value={state.rr} onChange={e => update('rr', e.target.value)} /></Field>
               <Field label="Temp"><Input id="temp" inputMode="decimal" placeholder="°F" value={state.temp} onChange={e => update('temp', e.target.value)} /></Field>
               <Field label="GRBS"><Input id="grbs" inputMode="decimal" placeholder="mg/dl" value={state.grbs} onChange={e => update('grbs', e.target.value)} /></Field>
@@ -343,7 +364,7 @@ export default function App() {
             <div className="flex gap-2">
               <button 
                 onClick={handleReset}
-                className="hidden sm:block px-3 py-2 text-xs font-bold rounded-lg border border-er-line bg-[#141414] text-er-ink-soft hover:text-er-ink hover:bg-[#202020] hover:border-[#383838] transition-colors"
+                className="px-3 py-2 text-xs font-bold rounded-lg border border-er-line bg-[#141414] text-er-ink-soft hover:text-er-ink hover:bg-[#202020] hover:border-[#383838] transition-colors cursor-pointer"
               >
                 Reset
               </button>
@@ -360,9 +381,11 @@ export default function App() {
             <AlertCircle size={14} className="flex-none mt-0.5 text-er-teal/70" />
             Click on any value below to jump directly to its input field.
           </div>
-          <div className="p-4 pb-8 text-xs font-mono text-er-ink whitespace-pre-wrap leading-relaxed">
+          <div className="p-4 pb-4 text-xs font-mono text-er-ink whitespace-pre-wrap leading-relaxed">
             <InteractivePreview content={messageInteractive} />
           </div>
+
+          <StandaloneAppButton />
         </div>
         
       </main>

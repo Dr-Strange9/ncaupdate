@@ -1,4 +1,5 @@
 import React from 'react';
+import { Check } from 'lucide-react';
 
 export function Field({ label, wide, children }: { label: string; wide?: boolean; children: React.ReactNode }) {
   return (
@@ -41,6 +42,64 @@ export function Select({ className = '', children, ...props }: SelectProps) {
     >
       {children}
     </select>
+  );
+}
+
+interface SelectionBoxProps {
+  id?: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: string;
+  help?: string;
+  disabled?: boolean;
+}
+
+export function SelectionBox({ id, checked, onChange, label, help, disabled }: SelectionBoxProps) {
+  return (
+    <div
+      id={id}
+      role="checkbox"
+      aria-checked={checked}
+      tabIndex={disabled ? -1 : 0}
+      onClick={() => !disabled && onChange(!checked)}
+      onKeyDown={e => {
+        if (!disabled && (e.key === ' ' || e.key === 'Enter')) {
+          e.preventDefault();
+          onChange(!checked);
+        }
+      }}
+      className={`flex items-center justify-between gap-3 p-3 border rounded-xl transition-all select-none ${
+        disabled
+          ? 'opacity-40 cursor-not-allowed bg-[#080808] border-er-line'
+          : checked
+          ? 'bg-[#0e1f1c] border-er-teal/70 hover:border-er-teal cursor-pointer'
+          : 'bg-[#0f0f0f] border-er-line hover:border-[#333333] hover:bg-[#141414] cursor-pointer'
+      }`}
+    >
+      <div className="flex items-center gap-3 min-w-0">
+        <div
+          className={`flex-none w-5 h-5 rounded-md border flex items-center justify-center transition-all ${
+            checked
+              ? 'bg-er-teal border-er-teal text-black shadow-sm'
+              : 'border-[#383838] bg-[#161616]'
+          }`}
+        >
+          {checked && <Check size={13} strokeWidth={3.2} />}
+        </div>
+        <div className="min-w-0">
+          <span className={`block text-[12px] font-bold leading-tight ${checked ? 'text-white' : 'text-er-ink'}`}>
+            {label}
+          </span>
+          {help && <div className="mt-0.5 text-[10px] text-er-ink-soft leading-snug">{help}</div>}
+        </div>
+      </div>
+
+      {checked && (
+        <span className="flex-none text-[9.5px] font-extrabold uppercase tracking-wider text-er-teal px-2 py-0.5 rounded bg-er-teal/15 border border-er-teal/30">
+          Selected
+        </span>
+      )}
+    </div>
   );
 }
 

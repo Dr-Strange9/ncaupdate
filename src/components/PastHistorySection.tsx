@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FormState, Comorbidity } from '../types';
-import { Field, Switch, Textarea } from './ui';
+import { Field, SelectionBox, Textarea } from './ui';
 import { ComorbidityField } from './ComorbidityField';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -85,9 +85,9 @@ export function PastHistorySection({
       {/* Expandable Content Area */}
       {isOpen && (
         <div className="grid grid-cols-1 gap-3 px-3 pb-3 pt-1">
-          {/* Master switch */}
+          {/* Master selection */}
           <Field label="">
-            <Switch
+            <SelectionBox
               id="noKnownSystemicHx"
               label="No known history of DM, HTN, Asthma, Epilepsy, Thyroid disease or TB"
               checked={noKnownSystemicHx}
@@ -96,7 +96,7 @@ export function PastHistorySection({
           </Field>
 
           {/* Comorbidity fields */}
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 gap-2.5">
             {COMORBIDITY_OPTIONS.map(({ key, label }) => (
               <ComorbidityField
                 key={key}

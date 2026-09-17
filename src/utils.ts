@@ -140,7 +140,7 @@ ${complaintsBold ? w(complaintsBold, 'complaints') : `*1).* ${w('-', 'complaints
 
 *BP*- ${w(s.bp ? `${s.bp} mmHg` : '', 'bp')}
 *PR*- ${w(s.pr ? `${s.pr} bpm` : '', 'pr')}
-*SpO2*- ${w(s.spo2 ? `${s.spo2} %` : '', 'spo2')}
+*SpO2*- ${w(s.spo2 ? `${s.spo2} % @ RA` : '', 'spo2')}
 *RR*- ${w(s.rr ? `${s.rr} /min` : '', 'rr')}
 *TEMP*- ${w(s.temp ? `${s.temp} °F` : '', 'temp')}
 *GRBS*- ${w(s.grbs ? `${s.grbs} mg/dl` : '', 'grbs')}

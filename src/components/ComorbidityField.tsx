@@ -1,6 +1,6 @@
 import React from 'react';
 import { Comorbidity } from '../types';
-import { Field, Input, Select, Switch } from './ui';
+import { Field, Input, Select, SelectionBox } from './ui';
 
 interface Props {
   key?: React.Key;
@@ -14,13 +14,14 @@ interface Props {
 
 export function ComorbidityField({ id, label, help, data, onChange, disabled }: Props) {
   return (
-    <div className={`flex flex-col min-w-0 ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
-      <Switch
+    <div className={`flex flex-col min-w-0 ${disabled ? 'opacity-40 pointer-events-none' : ''}`}>
+      <SelectionBox
         id={id}
         label={label}
         help={help}
         checked={data.known}
         onChange={(known) => onChange({ ...data, known })}
+        disabled={disabled}
       />
       
       {data.known && (
