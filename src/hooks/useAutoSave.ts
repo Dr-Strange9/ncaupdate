@@ -18,6 +18,7 @@ export function useAutoSave(state: FormState, setState: Dispatch<SetStateAction<
           setState({
             ...initialState,
             ...parsed,
+            hasOtherPastHx: parsed.hasOtherPastHx !== undefined ? Boolean(parsed.hasOtherPastHx) : Boolean(parsed.pastHx),
             comorbidities: {
               ...initialState.comorbidities,
               ...(parsed.comorbidities || {}),

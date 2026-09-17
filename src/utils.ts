@@ -107,8 +107,8 @@ export function buildMessage(s: FormState, interactive: boolean = false): string
     const notKnownNames = notKnownComorbidities.map(t => t.replace(/^Not a known case of /, '').replace(/\.$/, ''));
     pastHistoryText += (pastHistoryText ? '\n' : '') + `Not a known case of ${notKnownNames.join(', ')}.`;
   }
-  if (s.pastHx) {
-    pastHistoryText += `${pastHistoryText ? ' ' : ''}${s.pastHx}`;
+  if (s.hasOtherPastHx && s.pastHx && s.pastHx.trim()) {
+    pastHistoryText += `${pastHistoryText ? ' ' : ''}${s.pastHx.trim()}`;
   }
 
   return `*NEW CASE ALERT*

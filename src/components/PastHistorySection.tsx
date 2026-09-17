@@ -7,9 +7,11 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 interface PastHistorySectionProps {
   noKnownSystemicHx: boolean;
   comorbidities: FormState['comorbidities'];
+  hasOtherPastHx: boolean;
   pastHx: string;
   onUpdateNoKnown: (checked: boolean) => void;
   onUpdateComorbidity: (key: keyof FormState['comorbidities'], data: Comorbidity) => void;
+  onUpdateHasOtherPastHx: (checked: boolean) => void;
   onUpdatePastHx: (value: string) => void;
 }
 
@@ -25,9 +27,11 @@ export const COMORBIDITY_OPTIONS = [
 export function PastHistorySection({
   noKnownSystemicHx,
   comorbidities,
+  hasOtherPastHx,
   pastHx,
   onUpdateNoKnown,
   onUpdateComorbidity,
+  onUpdateHasOtherPastHx,
   onUpdatePastHx,
 }: PastHistorySectionProps) {
   const [isOpen, setIsOpen] = useState(true);
@@ -35,7 +39,7 @@ export function PastHistorySection({
   const selectedConditions = COMORBIDITY_OPTIONS.filter(
     ({ key }) => comorbidities[key]?.known
   );
-  const selectedCount = selectedConditions.length;
+  const selectedCount = selectedConditions.length + (hasOtherPastHx ? 1 : 0);
 
   const handleComorbidityChange = (key: keyof FormState['comorbidities'], data: Comorbidity) => {
     if (data.known && noKnownSystemicHx) {
@@ -52,7 +56,7 @@ export function PastHistorySection({
         id="pastHistoryToggle"
         onClick={() => setIsOpen(prev => !prev)}
         aria-expanded={isOpen}
-        className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left group hover:bg-er-teal-soft/60 transition-colors rounded-lg"
+        className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left group hover:bg-er-teal-soft/60 transition-colors rounded-lg cursor-pointer"
       >
         <div className="flex items-center gap-2">
           <div className="w-1 h-[13px] rounded-full bg-er-teal" />
@@ -64,7 +68,7 @@ export function PastHistorySection({
         <div className="flex items-center gap-2">
           {noKnownSystemicHx ? (
             <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-[#0f3c36] text-[#5eead4] border border-[#14b8a6]">
-              No known systemic hx
+              {hasOtherPastHx ? 'No systemic hx (+ allergies/other)' : 'No known systemic hx'}
             </span>
           ) : selectedCount > 0 ? (
             <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-[#0f3c36] text-[#5eead4] border border-[#14b8a6]">
@@ -85,7 +89,7 @@ export function PastHistorySection({
       {/* Expandable Content Area */}
       {isOpen && (
         <div className="grid grid-cols-1 gap-3 px-3 pb-3 pt-1">
-          {/* Master selection */}
+          {/* Master selection for systemic diseases */}
           <Field label="">
             <SelectionBox
               id="noKnownSystemicHx"
@@ -109,16 +113,34 @@ export function PastHistorySection({
             ))}
           </div>
 
-          {/* Other past history / known allergies */}
-          <Field label="Other past history / allergies">
-            <Textarea
-              id="pastHx"
-              className="min-h-[64px]"
-              placeholder="e.g. No known drug allergies."
-              value={pastHx}
-              onChange={e => onUpdatePastHx(e.target.value)}
+          {/* Other past history / known allergies selection box */}
+          <div className="pt-1 border-t border-er-line/60">
+            <SelectionBox
+              id="hasOtherPastHx"
+              label="Other past history / allergies"
+              help="Drug allergies, past surgeries, or other medical history"
+              checked={hasOtherPastHx}
+              onChange={(checked) => {
+                onUpdateHasOtherPastHx(checked);
+              }}
             />
-          </Field>
+          </div>
+
+          {/* Opened ONLY if selected */}
+          {hasOtherPastHx && (
+            <div className="animate-in fade-in slide-in-from-top-1 duration-150">
+              <Field label="Specify other past history / allergies">
+                <Textarea
+                  id="pastHx"
+                  className="min-h-[72px]"
+                  placeholder="e.g. Allergy to Penicillin / Prior appendectomy in 2018 / Chronic kidney disease"
+                  value={pastHx}
+                  onChange={e => onUpdatePastHx(e.target.value)}
+                  autoFocus
+                />
+              </Field>
+            </div>
+          )}
         </div>
       )}
     </div>

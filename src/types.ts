@@ -48,6 +48,7 @@ export type FormState = {
     thyroid: Comorbidity;
     tb: Comorbidity;
   };
+  hasOtherPastHx: boolean;
   pastHx: string;
 
   // Triage & Consult
@@ -96,6 +97,7 @@ export const initialState: FormState = {
     thyroid: { ...initialComorbidity },
     tb: { ...initialComorbidity },
   },
+  hasOtherPastHx: false,
   pastHx: '',
   triage: '', consultDept: '', consultDeptOther: '',
   doctors: [

@@ -8,7 +8,7 @@ import { StandaloneAppButton } from './components/StandaloneAppButton';
 import { buildMessage, buildPreNcaMessage } from './utils';
 import { useClipboard } from './hooks/useClipboard';
 import { useAutoSave } from './hooks/useAutoSave';
-import { AlertCircle, Copy, X } from 'lucide-react';
+import { AlertCircle, Copy, Trash2, X } from 'lucide-react';
 
 const InteractivePreview = ({ content, onNavigate }: { content: string, onNavigate?: () => void }) => {
   const parts = content.split(/\[\[([\s\S]*?)\]\]/g);
@@ -117,32 +117,35 @@ export default function App() {
   const preNcaInteractive = useMemo(() => buildPreNcaMessage(state, true), [state]);
 
   return (
-    <div className="min-h-screen pb-24 font-sans text-er-ink">
-      <header className="max-w-[1080px] mx-auto px-6 pt-7 pb-5 sm:px-5 sm:pt-5 sm:pb-4">
-        <div className="flex items-start justify-between gap-4 sm:items-center">
-          <div>
-            <h1 className="m-0 mt-1.5 text-3xl font-bold tracking-tight text-er-ink sm:text-2xl">New Case Alert</h1>
-            <div className="flex items-center gap-2 mt-1.5">
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-[#121212] border border-er-line text-er-ink-soft">
+    <div className="min-h-screen pb-24 font-sans text-er-ink bg-er-bg">
+      <header className="sticky top-0 z-30 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-er-line px-4 sm:px-6 py-3 sm:py-3.5">
+        <div className="max-w-[1080px] mx-auto flex items-center justify-between gap-3">
+          {/* Brand & Autosave Status */}
+          <div className="flex flex-col items-start min-w-0">
+            <h1 className="m-0 text-2xl sm:text-3xl font-extrabold tracking-tight text-er-ink">
+              New Case Alert
+            </h1>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#141414] border border-er-line text-er-ink-soft">
                 <span className={`w-1.5 h-1.5 rounded-full ${saveStatus === 'saving' ? 'bg-amber-400 animate-pulse' : 'bg-er-teal'}`} />
                 {saveStatus === 'saving' ? 'Saving draft...' : 'Draft saved'}
               </span>
-              <button
-                type="button"
-                onClick={handleReset}
-                className="text-[10.5px] text-er-ink-soft hover:text-er-alert transition-colors px-1.5 py-0.5 rounded hover:bg-white/5 cursor-pointer"
-                title="Clear current form and start fresh"
-              >
-                Clear draft
-              </button>
             </div>
           </div>
-          <button
-            onClick={() => setIsPreNcaOpen(true)}
-            className="flex-none mt-1 px-3 py-2 bg-er-panel text-er-ink border border-er-line rounded-lg font-bold text-xs shadow-sm hover:bg-[#181818] hover:border-[#333333] transition-colors cursor-pointer"
-          >
-            🚨 Pre-NCA
-          </button>
+
+          {/* Action Controls */}
+          <div className="flex items-center gap-2 flex-none">
+            <button
+              type="button"
+              id="headerPreNcaBtn"
+              onClick={() => setIsPreNcaOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#18150a] hover:bg-[#241f10] text-amber-300 border border-amber-500/40 hover:border-amber-400/70 active:scale-[0.98] transition-all cursor-pointer shadow-sm"
+              title="Open Pre-NCA quick notification drawer"
+            >
+              <span>🚨</span>
+              <span>Pre-NCA</span>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -219,7 +222,7 @@ export default function App() {
         </div>
       </aside>
 
-      <main className="max-w-[1080px] mx-auto px-6 sm:px-4 grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-6 items-start">
+      <main className="max-w-[1080px] mx-auto px-4 sm:px-6 pt-4 sm:pt-6 grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-6 items-start">
         
         {/* Form Panel */}
         <div className="bg-er-panel border border-er-line rounded-[14px] shadow-lg overflow-hidden sm:rounded-xl">
@@ -282,6 +285,7 @@ export default function App() {
             <PastHistorySection
               noKnownSystemicHx={state.noKnownSystemicHx}
               comorbidities={state.comorbidities}
+              hasOtherPastHx={state.hasOtherPastHx}
               pastHx={state.pastHx}
               onUpdateNoKnown={(checked) => {
                 update('noKnownSystemicHx', checked);
@@ -300,6 +304,7 @@ export default function App() {
                 }
               }}
               onUpdateComorbidity={updateComorbidity}
+              onUpdateHasOtherPastHx={(checked) => update('hasOtherPastHx', checked)}
               onUpdatePastHx={(val) => update('pastHx', val)}
             />
 
@@ -364,9 +369,12 @@ export default function App() {
             <div className="flex gap-2">
               <button 
                 onClick={handleReset}
-                className="px-3 py-2 text-xs font-bold rounded-lg border border-er-line bg-[#141414] text-er-ink-soft hover:text-er-ink hover:bg-[#202020] hover:border-[#383838] transition-colors cursor-pointer"
+                id="outputPanelClearDraftBtn"
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border border-red-900/50 bg-[#1d1010] text-red-400 hover:text-red-300 hover:bg-[#281313] hover:border-red-700 transition-colors cursor-pointer"
+                title="Clear current case draft and start fresh"
               >
-                Reset
+                <Trash2 size={13} />
+                <span>Clear draft</span>
               </button>
               <button
                 onClick={() => copyMain(messageOutput)}
