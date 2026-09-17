@@ -54,15 +54,15 @@ export function PastHistorySection({
         className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left group hover:bg-er-teal-soft/60 transition-colors rounded-lg cursor-pointer"
       >
         <div className="flex items-center gap-2">
-          <div className="w-1 h-[13px] rounded-full bg-er-teal" />
-          <span className="text-er-teal text-[10px] font-extrabold tracking-widest uppercase">
+          <div className="w-1 h-3.5 rounded-full bg-er-teal" />
+          <span className="text-er-teal text-xs font-extrabold tracking-wider uppercase">
             Past history
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="w-5 h-5 flex items-center justify-center rounded bg-[#141414] text-er-ink-soft group-hover:text-er-ink transition-colors border border-er-line">
-            {isOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+          <div className="w-6 h-6 flex items-center justify-center rounded bg-[#141414] text-er-ink-soft group-hover:text-er-ink transition-colors border border-er-line">
+            {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </div>
         </div>
       </button>

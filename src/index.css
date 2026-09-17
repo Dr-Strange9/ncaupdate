@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-er-bg: #000000;
-  --color-er-panel: #0a0a0a;
+  --color-er-bg: #050505;
+  --color-er-panel: #121212;
   --color-er-ink: #f4f4f5;
   --color-er-ink-soft: #a1a1aa;
-  --color-er-line: #1e1e1e;
+  --color-er-line: #262626;
   --color-er-teal: #14b8a6;
-  --color-er-teal-deep: #000000;
-  --color-er-teal-soft: #121212;
+  --color-er-teal-deep: #0a0a0a;
+  --color-er-teal-soft: #181818;
   --color-er-amber: #f59e0b;
   --color-er-alert: #ef4444;
   --font-sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;

@@ -36,25 +36,25 @@ export function DoctorsSection({
         className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left group hover:bg-er-teal-soft/60 transition-colors rounded-lg"
       >
         <div className="flex items-center gap-2">
-          <div className="w-1 h-[13px] rounded-full bg-er-teal" />
-          <span className="text-er-teal text-[10px] font-extrabold tracking-widest uppercase">
+          <div className="w-1 h-3.5 rounded-full bg-er-teal" />
+          <span className="text-er-teal text-xs font-extrabold tracking-wider uppercase">
             Consultation done by —
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           {activeCount > 0 ? (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-[#0f3c36] text-[#5eead4] border border-[#14b8a6]">
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-[#0f3c36] text-[#5eead4] border border-[#14b8a6]">
               {activeCount} {activeCount === 1 ? 'doc' : 'docs'}
             </span>
           ) : (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-medium bg-[#141414] text-er-ink-soft border border-er-line">
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#141414] text-er-ink-soft border border-er-line">
               0
             </span>
           )}
 
-          <div className="w-5 h-5 flex items-center justify-center rounded bg-[#141414] text-er-ink-soft group-hover:text-er-ink transition-colors border border-er-line">
-            {isOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+          <div className="w-6 h-6 flex items-center justify-center rounded bg-[#141414] text-er-ink-soft group-hover:text-er-ink transition-colors border border-er-line">
+            {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </div>
         </div>
       </button>
@@ -67,7 +67,7 @@ export function DoctorsSection({
               key={idx}
               className="p-2.5 border border-er-line rounded-lg bg-[#0a0a0a] flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
             >
-              <div className="w-full sm:w-[130px] flex-none">
+              <div className="w-full sm:w-36 flex-none">
                 <Select
                   id={`docRole${idx}`}
                   value={doc.role}
@@ -94,8 +94,9 @@ export function DoctorsSection({
                 <button
                   type="button"
                   onClick={() => onRemoveDoctor(idx)}
-                  className="p-2 text-er-ink-soft hover:text-er-alert transition-colors rounded-lg hover:bg-white/5 flex-none self-end sm:self-center"
+                  aria-label={`Remove Doctor ${idx + 1}`}
                   title={`Remove Doctor ${idx + 1}`}
+                  className="p-2 text-er-ink-soft hover:text-er-alert transition-colors rounded-lg hover:bg-white/5 flex-none self-end sm:self-center cursor-pointer"
                 >
                   <Trash2 size={16} />
                 </button>

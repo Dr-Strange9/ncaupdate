@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { Smartphone, Download, CheckCircle2, Wifi, WifiOff, X, Share, PlusSquare } from 'lucide-react';
 
 export function StandaloneAppButton() {
   const { isStandalone, isIOS, isOnline, triggerInstall } = usePWAInstall();
   const [showInstructions, setShowInstructions] = useState(false);
+
+  useEffect(() => {
+    if (!showInstructions) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowInstructions(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showInstructions]);
 
   const handleClick = async () => {
     const result = await triggerInstall();
@@ -25,12 +36,12 @@ export function StandaloneAppButton() {
               <div className="text-xs font-bold text-er-teal flex items-center gap-1.5">
                 Standalone App Mode Active
               </div>
-              <div className="text-[11px] text-[#5eead4]/80">
+              <div className="text-xs text-[#5eead4]/80 mt-0.5">
                 Full offline caching active • No browser bars
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-1 text-[10.5px] font-semibold px-2 py-0.5 rounded-md bg-black/40 text-er-ink-soft border border-er-line">
+          <div className="flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-md bg-black/40 text-er-ink-soft border border-er-line">
             {isOnline ? (
               <>
                 <Wifi size={12} className="text-er-teal" />
@@ -54,11 +65,11 @@ export function StandaloneAppButton() {
               <div>
                 <div className="text-xs font-bold text-er-ink flex items-center gap-1.5">
                   Standalone App Mode
-                  <span className="text-[9px] uppercase px-1.5 py-0.2 rounded font-extrabold bg-er-teal/20 text-er-teal border border-er-teal/30">
+                  <span className="text-[10px] uppercase px-1.5 py-0.5 rounded font-extrabold bg-er-teal/20 text-er-teal border border-er-teal/30">
                     Offline
                   </span>
                 </div>
-                <div className="text-[11px] text-er-ink-soft mt-0.5">
+                <div className="text-xs text-er-ink-soft mt-0.5">
                   Install to home screen for full-screen & zero-internet use
                 </div>
               </div>
@@ -79,33 +90,46 @@ export function StandaloneAppButton() {
 
       {/* Manual Instructions Modal for iOS / Safari / unsupported prompt browsers */}
       {showInstructions && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-3 bg-black/80 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="w-full max-w-sm bg-[#111111] border border-er-line rounded-2xl p-5 shadow-2xl space-y-4">
+        <div 
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-3 bg-black/80 backdrop-blur-sm animate-in fade-in duration-150"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowInstructions(false);
+          }}
+        >
+          <div 
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="installModalTitle"
+            aria-describedby="installModalDesc"
+            className="w-full max-w-sm bg-[#111111] border border-er-line rounded-2xl p-5 shadow-2xl space-y-4"
+          >
             <div className="flex items-center justify-between border-b border-er-line/80 pb-3">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-er-teal/20 text-er-teal flex items-center justify-center">
                   <Smartphone size={16} />
                 </div>
-                <h4 className="text-xs font-bold text-er-ink uppercase tracking-wider">
+                <h4 id="installModalTitle" className="text-xs font-bold text-er-ink uppercase tracking-wider">
                   Add to Home Screen
                 </h4>
               </div>
               <button
                 type="button"
                 onClick={() => setShowInstructions(false)}
+                aria-label="Close installation instructions"
+                title="Close installation instructions"
                 className="p-1 rounded-md text-er-ink-soft hover:text-er-ink hover:bg-white/5 transition-colors cursor-pointer"
               >
                 <X size={16} />
               </button>
             </div>
 
-            <p className="text-xs text-er-ink-soft leading-relaxed">
+            <p id="installModalDesc" className="text-xs text-er-ink-soft leading-relaxed">
               Install <strong>New Case Alert</strong> on your phone for full offline access, zero address bar distractions, and fast 1-tap launching:
             </p>
 
             <div className="space-y-2.5 text-xs text-er-ink bg-[#161616] p-3 rounded-xl border border-er-line">
               <div className="flex items-center gap-2.5">
-                <div className="w-6 h-6 rounded-md bg-[#222222] flex items-center justify-center text-er-teal flex-none font-bold text-[11px]">
+                <div className="w-6 h-6 rounded-md bg-[#222222] flex items-center justify-center text-er-teal flex-none font-bold text-xs">
                   1
                 </div>
                 <div className="flex items-center gap-1.5 flex-wrap">
@@ -123,7 +147,7 @@ export function StandaloneAppButton() {
               </div>
 
               <div className="flex items-center gap-2.5">
-                <div className="w-6 h-6 rounded-md bg-[#222222] flex items-center justify-center text-er-teal flex-none font-bold text-[11px]">
+                <div className="w-6 h-6 rounded-md bg-[#222222] flex items-center justify-center text-er-teal flex-none font-bold text-xs">
                   2
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -132,7 +156,7 @@ export function StandaloneAppButton() {
               </div>
 
               <div className="flex items-center gap-2.5">
-                <div className="w-6 h-6 rounded-md bg-[#222222] flex items-center justify-center text-er-teal flex-none font-bold text-[11px]">
+                <div className="w-6 h-6 rounded-md bg-[#222222] flex items-center justify-center text-er-teal flex-none font-bold text-xs">
                   3
                 </div>
                 <div>

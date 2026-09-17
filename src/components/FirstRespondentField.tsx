@@ -74,7 +74,7 @@ export function FirstRespondentField({
 
       {/* Primary FR Respondent */}
       <div className="flex items-center gap-2">
-        <div className="w-[72px] flex-none px-2.5 py-2 text-xs font-extrabold text-center rounded-lg bg-[#141414] border border-er-line text-er-teal">
+        <div className="w-16 min-h-[44px] flex-none py-2.5 text-xs font-extrabold text-center rounded-lg bg-[#141414] border border-er-line text-er-teal flex items-center justify-center">
           FR
         </div>
         <div className="flex-1 min-w-0">
@@ -90,7 +90,7 @@ export function FirstRespondentField({
       {/* Secondary Co-FR Respondent (if active) */}
       {isCoFrActive && (
         <div className="flex items-center gap-2">
-          <div className="w-[72px] flex-none px-2.5 py-2 text-xs font-extrabold text-center rounded-lg bg-[#141414] border border-er-line text-er-teal">
+          <div className="w-16 min-h-[44px] flex-none py-2.5 text-xs font-extrabold text-center rounded-lg bg-[#141414] border border-er-line text-er-teal flex items-center justify-center">
             Co-FR
           </div>
           <div className="flex-1 min-w-0">
@@ -105,10 +105,11 @@ export function FirstRespondentField({
             type="button"
             id={`${idPrefix}-removeCoFrBtn`}
             onClick={handleSetFrOnly}
+            aria-label="Remove Co-FR"
             title="Remove Co-FR"
-            className="flex-none p-2 rounded-lg bg-[#141414] border border-[#262626] text-er-ink-soft hover:text-er-alert hover:border-er-alert/50 transition-colors flex items-center justify-center cursor-pointer"
+            className="flex-none w-10 h-[44px] rounded-lg bg-[#141414] border border-[#262626] text-er-ink-soft hover:text-er-alert hover:border-er-alert/50 transition-colors flex items-center justify-center cursor-pointer"
           >
-            <X size={15} />
+            <X size={16} />
           </button>
         </div>
       )}

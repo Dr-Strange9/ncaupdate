@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { FormState, initialState, Doctor, Comorbidity, initialComorbidity } from './types';
-import { Field, Input, Select, Textarea } from './components/ui';
+import { Field, Input, Select, Textarea, SectionTitle } from './components/ui';
 import { PastHistorySection } from './components/PastHistorySection';
 import { DoctorsSection } from './components/DoctorsSection';
 import { FirstRespondentField } from './components/FirstRespondentField';
@@ -30,20 +30,31 @@ const InteractivePreview = ({ content, onNavigate }: { content: string, onNaviga
           if (splitIdx === -1) return <React.Fragment key={index}>{renderText(part)}</React.Fragment>;
           const id = part.slice(0, splitIdx);
           const value = part.slice(splitIdx + 2);
+
+          const handleJump = () => {
+            const el = document.getElementById(id);
+            if (el) {
+              onNavigate?.();
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              el.focus({ preventScroll: true });
+            }
+          };
           
           return (
             <span 
               key={index}
-              onClick={() => {
-                const el = document.getElementById(id);
-                if (el) {
-                  onNavigate?.();
-                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  el.focus({ preventScroll: true });
+              role="button"
+              tabIndex={0}
+              onClick={handleJump}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleJump();
                 }
               }}
-              className="cursor-pointer hover:bg-er-teal/20 hover:text-white transition-colors rounded px-1 -mx-1"
-              title="Click to edit"
+              className="cursor-pointer hover:bg-er-teal/20 hover:text-white transition-colors rounded px-1 -mx-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-er-teal focus-visible:bg-er-teal/25"
+              title="Click or press Enter to edit"
+              aria-label={`Jump to edit field for ${value.trim() || id}`}
             >
               {renderText(value)}
             </span>
@@ -55,16 +66,20 @@ const InteractivePreview = ({ content, onNavigate }: { content: string, onNaviga
   );
 };
 
-const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <h3 className="flex items-center gap-2 m-0 px-4 pt-4 pb-2 border-t border-er-line text-er-teal text-[10.5px] font-extrabold tracking-widest uppercase">
-    <div className="w-1 h-[15px] rounded-full bg-er-teal" />
-    {children}
-  </h3>
-);
-
 export default function App() {
   const [state, setState] = useState<FormState>(initialState);
   const [isPreNcaOpen, setIsPreNcaOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isPreNcaOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsPreNcaOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isPreNcaOpen]);
 
   const { saveStatus, clearDraft } = useAutoSave(state, setState);
 
@@ -126,7 +141,7 @@ export default function App() {
               New Case Alert
             </h1>
             <div className="flex items-center gap-2 mt-1">
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#141414] border border-er-line text-er-ink-soft">
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-semibold bg-[#141414] border border-er-line text-er-ink-soft">
                 <span className={`w-1.5 h-1.5 rounded-full ${saveStatus === 'saving' ? 'bg-amber-400 animate-pulse' : 'bg-er-teal'}`} />
                 {saveStatus === 'saving' ? 'Saving draft...' : 'Draft saved'}
               </span>
@@ -157,16 +172,24 @@ export default function App() {
 
       {/* Pre-NCA Drawer */}
       <aside 
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="preNcaDrawerTitle"
+        aria-describedby="preNcaDrawerDesc"
+        aria-hidden={!isPreNcaOpen}
         className={`fixed top-0 right-0 bottom-0 z-[51] w-full max-w-[560px] bg-er-bg shadow-2xl overflow-y-auto transition-transform duration-300 ${isPreNcaOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-4 bg-[#0a0a0a] border-b border-er-line text-er-ink">
           <div>
-            <div className="text-[15px] font-extrabold">🚨 Pre-NCA</div>
-            <div className="text-[10.5px] text-er-ink-soft mt-0.5">Quick pre-NCA notification</div>
+            <div id="preNcaDrawerTitle" className="text-base font-extrabold">🚨 Pre-NCA</div>
+            <div id="preNcaDrawerDesc" className="text-xs text-er-ink-soft mt-0.5">Quick pre-NCA notification</div>
           </div>
           <button 
+            type="button"
             onClick={() => setIsPreNcaOpen(false)}
-            className="flex items-center justify-center w-9 h-9 rounded-lg border border-er-line/70 bg-white/5 hover:bg-white/10 text-er-ink transition-colors"
+            aria-label="Close Pre-NCA drawer"
+            title="Close Pre-NCA drawer"
+            className="flex items-center justify-center w-9 h-9 rounded-lg border border-er-line/70 bg-white/5 hover:bg-white/10 text-er-ink transition-colors cursor-pointer"
           >
             <X size={20} />
           </button>
@@ -176,7 +199,7 @@ export default function App() {
           <div className="bg-er-panel border border-er-line rounded-xl overflow-hidden shadow-lg">
             <div className="flex items-center justify-between px-4 py-3.5 bg-[#0a0a0a] border-b border-er-line">
               <div>
-                <div className="text-[15px] font-black text-er-ink">🚨 Pre-NCA</div>
+                <div className="text-base font-black text-er-ink">🚨 Pre-NCA</div>
               </div>
               <button
                 onClick={() => copyPre(preNcaOutput)}
@@ -196,7 +219,7 @@ export default function App() {
                 <Field label="Age & Gender"><Input id="preNcaAgeGender" placeholder="e.g. 55 / M" value={state.preNcaAgeGender} onChange={e => update('preNcaAgeGender', e.target.value)} /></Field>
                 <Field label="Presenting complaints" wide><Textarea id="preNcaComplaints" className="min-h-[60px]" placeholder="Enter presenting complaint(s)" value={state.preNcaComplaints} onChange={e => update('preNcaComplaints', e.target.value)} /></Field>
                 
-                <Field label="First Respondent (FR / Co-FR)" wide>
+                <Field label="First Respondent (FR / Co-FR)" wide htmlFor="preNcaFrName">
                   <FirstRespondentField
                     idPrefix="preNca"
                     frRole={state.preNcaFrRole}
@@ -213,8 +236,8 @@ export default function App() {
             </div>
 
             <div className="border-t border-er-line bg-[#050505]">
-              <div className="px-4 py-2.5 text-[10px] font-extrabold tracking-widest text-er-teal uppercase">PRE-NCA MESSAGE</div>
-              <div className="px-4 pb-4 text-xs font-mono text-er-ink whitespace-pre-wrap leading-relaxed">
+              <div className="px-4 py-2.5 text-xs font-extrabold tracking-wider text-er-teal uppercase">PRE-NCA MESSAGE</div>
+              <div className="px-4 pb-4 text-sm font-mono text-er-ink whitespace-pre-wrap leading-relaxed">
                 <InteractivePreview content={preNcaInteractive} onNavigate={() => setIsPreNcaOpen(false)} />
               </div>
             </div>
@@ -225,18 +248,15 @@ export default function App() {
       <main className="max-w-[1080px] mx-auto px-4 sm:px-6 pt-4 sm:pt-6 grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-6 items-start">
         
         {/* Form Panel */}
-        <div className="bg-er-panel border border-er-line rounded-[14px] shadow-lg overflow-hidden sm:rounded-xl">
+        <div className="bg-er-panel border border-er-line rounded-xl shadow-lg overflow-hidden">
           
           <div className="px-4 py-3 sm:px-3">
             {/* Case identification */}
-            <div className="pt-1 pb-4">
-              <div className="text-[10.5px] font-extrabold tracking-widest text-er-teal uppercase mb-3 px-1 flex items-center gap-2">
-                <div className="w-1 h-[15px] rounded-full bg-er-teal" />
-                Case identification
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-1">
+            <div className="pb-4">
+              <SectionTitle>Case identification</SectionTitle>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-1 mt-3">
                 <Field label="ER SL. No."><Input id="erSl" inputMode="numeric" placeholder="e.g. 6" value={state.erSl} onChange={e => update('erSl', e.target.value)} /></Field>
-                <Field label="First Respondent (FR / Co-FR)" wide>
+                <Field label="First Respondent (FR / Co-FR)" wide htmlFor="frName">
                   <FirstRespondentField
                     idPrefix="main"
                     frRole={state.frRole}
@@ -350,7 +370,9 @@ export default function App() {
             <div className="grid grid-cols-1 gap-3 px-1 pb-4">
               <Field label="Investigations advised"><Textarea id="invx" rows={6} className="min-h-[165px]" placeholder="e.g. CBP, RFT, LFT, USG abdomen" value={state.invx} onChange={e => update('invx', e.target.value)} /></Field>
               <Field label="Treatment initiated in ER"><Textarea id="tx" rows={6} className="min-h-[165px]" placeholder="e.g. IVF NS started, Inj. Pantop IV stat" value={state.tx} onChange={e => update('tx', e.target.value)} /></Field>
-              <Field label="Provisional / final diagnosis"><Textarea id="diagnosis" placeholder="e.g. ? Acute appendicitis" value={state.diagnosis} onChange={e => update('diagnosis', e.target.value)} /></Field>
+              <Field label="Provisional / final diagnosis">
+                <Textarea id="diagnosis" placeholder="e.g. ? Acute appendicitis" value={state.diagnosis} onChange={e => update('diagnosis', e.target.value)} />
+              </Field>
             </div>
 
             <SectionTitle>MRD & date</SectionTitle>
@@ -363,7 +385,7 @@ export default function App() {
         </div>
 
         {/* Output Panel */}
-        <div className="flex flex-col h-full bg-er-panel border border-er-line rounded-[14px] shadow-lg sm:rounded-xl">
+        <div className="flex flex-col h-full bg-er-panel border border-er-line rounded-xl shadow-lg">
           <div className="flex items-center justify-between gap-3 px-4 py-3 bg-[#0a0a0a] text-er-ink border-b border-er-line">
             <h2 className="m-0 text-xs font-extrabold tracking-widest uppercase">Formatted message</h2>
             <div className="flex gap-2">
@@ -378,18 +400,24 @@ export default function App() {
               </button>
               <button
                 onClick={() => copyMain(messageOutput)}
-                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border shadow-sm transition-colors ${copiedMain ? 'bg-[#0f3c36] text-[#5eead4] border-[#14b8a6]' : 'bg-[#141414] text-er-ink border-[#262626] hover:bg-[#202020] hover:border-[#383838]'}`}
+                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border shadow-sm transition-colors cursor-pointer ${
+                  copiedMain
+                    ? 'bg-[#0f3c36] text-[#5eead4] border-[#14b8a6]'
+                    : 'bg-[#141414] text-er-ink border-[#262626] hover:bg-[#202020] hover:border-[#383838]'
+                }`}
+                title="Copy handover message"
               >
                 <Copy size={14} />
-                {copiedMain ? 'Copied ✓' : 'Copy'}
+                <span>{copiedMain ? 'Copied ✓' : 'Copy'}</span>
               </button>
             </div>
           </div>
-          <div className="px-4 pt-3 text-[10.5px] text-er-ink-soft leading-snug flex items-start gap-1.5">
-            <AlertCircle size={14} className="flex-none mt-0.5 text-er-teal/70" />
+
+          <div className="px-4 pt-3 text-xs text-er-ink-soft leading-snug flex items-start gap-1.5">
+            <AlertCircle size={15} className="flex-none mt-0.5 text-er-teal/70" />
             Click on any value below to jump directly to its input field.
           </div>
-          <div className="p-4 pb-4 text-xs font-mono text-er-ink whitespace-pre-wrap leading-relaxed">
+          <div className="p-4 pb-4 text-sm sm:text-[15px] font-mono text-er-ink whitespace-pre-wrap leading-relaxed">
             <InteractivePreview content={messageInteractive} />
           </div>
 
