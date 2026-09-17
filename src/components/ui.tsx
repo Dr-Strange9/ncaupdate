@@ -93,12 +93,6 @@ export function SelectionBox({ id, checked, onChange, label, help, disabled }: S
           {help && <div className="mt-0.5 text-[10px] text-er-ink-soft leading-snug">{help}</div>}
         </div>
       </div>
-
-      {checked && (
-        <span className="flex-none text-[9.5px] font-extrabold uppercase tracking-wider text-er-teal px-2 py-0.5 rounded bg-er-teal/15 border border-er-teal/30">
-          Selected
-        </span>
-      )}
     </div>
   );
 }

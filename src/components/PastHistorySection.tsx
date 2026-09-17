@@ -36,11 +36,6 @@ export function PastHistorySection({
 }: PastHistorySectionProps) {
   const [isOpen, setIsOpen] = useState(true);
 
-  const selectedConditions = COMORBIDITY_OPTIONS.filter(
-    ({ key }) => comorbidities[key]?.known
-  );
-  const selectedCount = selectedConditions.length + (hasOtherPastHx ? 1 : 0);
-
   const handleComorbidityChange = (key: keyof FormState['comorbidities'], data: Comorbidity) => {
     if (data.known && noKnownSystemicHx) {
       onUpdateNoKnown(false);
@@ -66,20 +61,6 @@ export function PastHistorySection({
         </div>
 
         <div className="flex items-center gap-2">
-          {noKnownSystemicHx ? (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-[#0f3c36] text-[#5eead4] border border-[#14b8a6]">
-              {hasOtherPastHx ? 'No systemic hx (+ allergies/other)' : 'No known systemic hx'}
-            </span>
-          ) : selectedCount > 0 ? (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-[#0f3c36] text-[#5eead4] border border-[#14b8a6]">
-              {selectedCount} selected
-            </span>
-          ) : (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-medium bg-[#141414] text-er-ink-soft border border-er-line">
-              0 selected
-            </span>
-          )}
-
           <div className="w-5 h-5 flex items-center justify-center rounded bg-[#141414] text-er-ink-soft group-hover:text-er-ink transition-colors border border-er-line">
             {isOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
           </div>
