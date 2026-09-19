@@ -54,8 +54,8 @@ export function PastHistorySection({
         className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left group hover:bg-er-teal-soft/60 transition-colors rounded-lg cursor-pointer"
       >
         <div className="flex items-center gap-2">
-          <div className="w-1 h-3.5 rounded-full bg-er-teal" />
-          <span className="text-er-teal text-xs font-extrabold tracking-wider uppercase">
+          <div className="w-1.5 h-3.5 rounded-full bg-slate-400" />
+          <span className="text-slate-300 text-[13px] font-extrabold tracking-wider uppercase">
             Past history
           </span>
         </div>

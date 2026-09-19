@@ -3,9 +3,9 @@ import { Check } from 'lucide-react';
 
 export function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-2 pt-4 pb-2 border-t border-er-line/80">
-      <div className="w-1 h-3.5 bg-er-teal rounded-full flex-none" />
-      <span className="text-xs font-extrabold text-er-teal uppercase tracking-wider">{children}</span>
+    <div className="flex items-center gap-2.5 pt-5 pb-2 border-t border-er-line/80">
+      <div className="w-1.5 h-4 bg-slate-400 rounded-full flex-none" />
+      <h3 className="text-[15px] font-extrabold text-slate-200 uppercase tracking-wider">{children}</h3>
     </div>
   );
 }
@@ -14,12 +14,14 @@ export function Field({
   label,
   htmlFor,
   wide,
+  isEmptyCritical,
   children,
   id,
 }: {
   label: string;
   htmlFor?: string;
   wide?: boolean;
+  isEmptyCritical?: boolean;
   children: React.ReactNode;
   id?: string;
 }) {
@@ -31,14 +33,25 @@ export function Field({
   return (
     <div className={`flex flex-col gap-1.5 min-w-0 ${wide ? 'col-span-full' : ''}`} id={id}>
       {label && (
-        <label
-          htmlFor={targetId}
-          className="text-xs font-bold text-er-ink-soft leading-snug cursor-pointer select-none"
-        >
-          {label}
-        </label>
+        <div className="flex items-center gap-1.5">
+          {isEmptyCritical && (
+            <span
+              className="w-1.5 h-1.5 rounded-full bg-er-amber flex-none"
+              title="Empty critical field"
+              aria-label="Empty critical field"
+            />
+          )}
+          <label
+            htmlFor={targetId}
+            className="text-[13px] font-bold text-er-ink-soft leading-snug cursor-pointer select-none"
+          >
+            {label}
+          </label>
+        </div>
       )}
-      {children}
+      <div className={isEmptyCritical ? 'relative border-l-2 border-l-er-amber/80 pl-1' : ''}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -46,7 +59,7 @@ export function Field({
 export function Input({ className = '', ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
-      className={`w-full min-h-[44px] px-3.5 py-2.5 bg-[#0a0a0a] text-er-ink border border-er-line hover:border-[#383838] focus:border-er-teal focus:ring-4 focus:ring-er-teal/15 rounded-lg text-sm sm:text-[15px] font-medium outline-none transition-all placeholder:text-[#9ca3af] focus:bg-[#050505] ${className}`}
+      className={`w-full min-h-[44px] px-3.5 py-2.5 bg-[#0c0c0c] text-er-ink border border-[#2b2b2b] hover:border-[#3c3c3c] focus:border-er-teal focus:ring-4 focus:ring-er-teal/15 rounded-lg text-[16px] font-medium outline-none transition-all placeholder:text-[#9ca3af] focus:bg-[#050505] ${className}`}
       {...props}
     />
   );
@@ -55,7 +68,7 @@ export function Input({ className = '', ...props }: React.InputHTMLAttributes<HT
 export function Textarea({ className = '', ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
-      className={`w-full min-h-[84px] px-3.5 py-2.5 bg-[#0a0a0a] text-er-ink border border-er-line hover:border-[#383838] focus:border-er-teal focus:ring-4 focus:ring-er-teal/15 rounded-lg text-sm sm:text-[15px] font-medium outline-none transition-all resize-y leading-relaxed placeholder:text-[#9ca3af] focus:bg-[#050505] ${className}`}
+      className={`w-full min-h-[84px] px-3.5 py-2.5 bg-[#0c0c0c] text-er-ink border border-[#2b2b2b] hover:border-[#3c3c3c] focus:border-er-teal focus:ring-4 focus:ring-er-teal/15 rounded-lg text-[16px] font-medium outline-none transition-all resize-y leading-relaxed placeholder:text-[#9ca3af] focus:bg-[#050505] ${className}`}
       {...props}
     />
   );
@@ -64,7 +77,7 @@ export function Textarea({ className = '', ...props }: React.TextareaHTMLAttribu
 export function Select({ className = '', children, ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
-      className={`w-full min-h-[44px] px-3.5 py-2.5 bg-[#0a0a0a] text-er-ink border border-er-line hover:border-[#383838] focus:border-er-teal focus:ring-4 focus:ring-er-teal/15 rounded-lg text-sm sm:text-[15px] font-medium outline-none transition-all focus:bg-[#050505] ${className}`}
+      className={`w-full min-h-[44px] px-3.5 py-2.5 bg-[#0c0c0c] text-er-ink border border-[#2b2b2b] hover:border-[#3c3c3c] focus:border-er-teal focus:ring-4 focus:ring-er-teal/15 rounded-lg text-[16px] font-medium outline-none transition-all focus:bg-[#050505] ${className}`}
       {...props}
     >
       {children}
@@ -95,12 +108,12 @@ export function SelectionBox({ id, checked, onChange, label, help, disabled }: S
           onChange(!checked);
         }
       }}
-      className={`flex items-center justify-between gap-3 p-3.5 border rounded-xl transition-all select-none ${
+      className={`flex items-center justify-between gap-3 p-3 border rounded-xl transition-all select-none ${
         disabled
           ? 'opacity-40 cursor-not-allowed bg-[#080808] border-er-line'
           : checked
-          ? 'bg-[#0e2723] border-er-teal/80 hover:border-er-teal cursor-pointer'
-          : 'bg-[#141414] border-er-line hover:border-[#383838] hover:bg-[#1a1a1a] cursor-pointer'
+          ? 'bg-[#0d2823] border-er-teal/80 hover:border-er-teal cursor-pointer shadow-sm'
+          : 'bg-[#161616] border-[#282828] hover:border-[#383838] hover:bg-[#1c1c1c] cursor-pointer shadow-sm shadow-black/20'
       }`}
     >
       <div className="flex items-center gap-3 min-w-0">
@@ -114,10 +127,10 @@ export function SelectionBox({ id, checked, onChange, label, help, disabled }: S
           {checked && <Check size={14} strokeWidth={3.2} />}
         </div>
         <div className="min-w-0">
-          <span className={`block text-sm font-bold leading-tight ${checked ? 'text-white' : 'text-er-ink'}`}>
+          <span className={`block text-[13px] font-bold leading-tight ${checked ? 'text-white' : 'text-er-ink'}`}>
             {label}
           </span>
-          {help && <div className="mt-1 text-xs text-er-ink-soft leading-snug">{help}</div>}
+          {help && <div className="mt-1 text-[11px] text-er-ink-soft leading-snug">{help}</div>}
         </div>
       </div>
     </div>

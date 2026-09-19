@@ -36,19 +36,19 @@ export function DoctorsSection({
         className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left group hover:bg-er-teal-soft/60 transition-colors rounded-lg"
       >
         <div className="flex items-center gap-2">
-          <div className="w-1 h-3.5 rounded-full bg-er-teal" />
-          <span className="text-er-teal text-xs font-extrabold tracking-wider uppercase">
+          <div className="w-1.5 h-3.5 rounded-full bg-slate-400" />
+          <span className="text-slate-300 text-[13px] font-extrabold tracking-wider uppercase">
             Consultation done by —
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           {activeCount > 0 ? (
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-[#0f3c36] text-[#5eead4] border border-[#14b8a6]">
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-[#0f3c36] text-[#5eead4] border border-[#14b8a6]">
               {activeCount} {activeCount === 1 ? 'doc' : 'docs'}
             </span>
           ) : (
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#141414] text-er-ink-soft border border-er-line">
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-[#141414] text-er-ink-soft border border-er-line">
               0
             </span>
           )}
@@ -65,7 +65,7 @@ export function DoctorsSection({
           {doctors.map((doc, idx) => (
             <div
               key={idx}
-              className="p-2.5 border border-er-line rounded-lg bg-[#0a0a0a] flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
+              className="p-3 border border-[#2b2b2b] rounded-xl bg-[#181818] shadow-sm shadow-black/30 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5"
             >
               <div className="w-full sm:w-36 flex-none">
                 <Select
@@ -96,9 +96,10 @@ export function DoctorsSection({
                   onClick={() => onRemoveDoctor(idx)}
                   aria-label={`Remove Doctor ${idx + 1}`}
                   title={`Remove Doctor ${idx + 1}`}
-                  className="p-2 text-er-ink-soft hover:text-er-alert transition-colors rounded-lg hover:bg-white/5 flex-none self-end sm:self-center cursor-pointer"
+                  className="flex items-center gap-1.5 px-2.5 py-2 text-red-300 bg-red-950/40 border border-red-900/60 hover:bg-red-900/50 transition-colors rounded-lg flex-none self-end sm:self-center cursor-pointer text-[11px] font-bold"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={13} />
+                  <span>Remove</span>
                 </button>
               )}
             </div>
@@ -109,9 +110,9 @@ export function DoctorsSection({
             type="button"
             id="addDoctorBtn"
             onClick={onAddDoctor}
-            className="flex items-center justify-center gap-1.5 py-1.5 px-3 bg-[#101010] text-er-teal border border-dashed border-er-line rounded-lg font-bold text-xs hover:bg-[#181818] hover:border-er-teal transition-all cursor-pointer"
+            className="flex items-center justify-center gap-1.5 py-2 px-3 bg-[#161616] text-er-teal border border-dashed border-[#2c2c2c] rounded-lg font-bold text-[13px] hover:bg-[#1e1e1e] hover:border-er-teal transition-all cursor-pointer"
           >
-            <UserPlus size={13} />
+            <UserPlus size={14} />
             <span>+ Add doctor</span>
           </button>
         </div>

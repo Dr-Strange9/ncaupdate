@@ -30,14 +30,34 @@ export function formatDateDMY(value: string) {
   return `${d}-${m}-${y}`;
 }
 
+export function wrapField(
+  val: string | undefined,
+  id: string,
+  interactive: boolean = false,
+  dashIfEmpty: boolean = true
+): string {
+  const display = val ? val : (dashIfEmpty ? '-' : '');
+  if (interactive && id) {
+    return `[[${id}::${display}]]`;
+  }
+  return display;
+}
+
+export function formatFrLine(
+  frName?: string,
+  frRole?: string,
+  coFrName?: string,
+  coFrRole?: string
+): string {
+  const parts: string[] = [];
+  if (frName) parts.push(`${frName} (${frRole || 'FR'})`);
+  if (coFrName && coFrRole) parts.push(`${coFrName} (${coFrRole})`);
+  return parts.join('\n');
+}
+
 export function buildMessage(s: FormState, interactive: boolean = false): string {
-  const w = (val: string | undefined, id: string, dashIfEmpty: boolean = true) => {
-    let display = val ? val : (dashIfEmpty ? '-' : '');
-    if (interactive && id) {
-      return `[[${id}::${display}]]`;
-    }
-    return display;
-  };
+  const w = (val: string | undefined, id: string, dashIfEmpty: boolean = true) =>
+    wrapField(val, id, interactive, dashIfEmpty);
 
   const complaintsRaw = s.complaints;
   let complaintsBold = "";
@@ -55,17 +75,14 @@ export function buildMessage(s: FormState, interactive: boolean = false): string
     if (s.consultTime) consultLine += ' @' + formatTime12h(s.consultTime);
   }
 
-  const frParts = [];
-  if (s.frName) frParts.push(`${s.frName} (${s.frRole || 'FR'})`);
-  if (s.coFrName && s.coFrRole) frParts.push(`${s.coFrName} (${s.coFrRole})`);
-  const frOutput = frParts.join('\n');
+  const frOutput = formatFrLine(s.frName, s.frRole, s.coFrName, s.coFrRole);
 
   const doctorParts = [];
   for (const doc of s.doctors) {
     if (doc.name && doc.role) {
-      doctorParts.push(`Dr . ${doc.name} (${doc.role})`);
+      doctorParts.push(`Dr. ${doc.name} (${doc.role})`);
     } else if (doc.name) {
-      doctorParts.push(`Dr . ${doc.name}`);
+      doctorParts.push(`Dr. ${doc.name}`);
     }
   }
   const consultDoctorsVal = doctorParts.join('\n');
@@ -188,20 +205,15 @@ ${w(s.diagnosis, 'diagnosis')}
 }
 
 export function buildPreNcaMessage(s: FormState, interactive: boolean = false): string {
-  const w = (val: string | undefined, id: string, dashIfEmpty: boolean = true) => {
-    let display = val ? val : (dashIfEmpty ? '-' : '');
-    if (interactive && id) {
-      return `[[${id}::${display}]]`;
-    }
-    return display;
-  };
+  const w = (val: string | undefined, id: string, dashIfEmpty: boolean = true) =>
+    wrapField(val, id, interactive, dashIfEmpty);
 
-  const preNcaFrParts = [];
-  if (s.preNcaFrName) preNcaFrParts.push(`${s.preNcaFrName} (${s.preNcaFrRole || 'FR'})`);
-  if (s.preNcaCoFrName && s.preNcaCoFrRole) {
-    preNcaFrParts.push(`${s.preNcaCoFrName} (${s.preNcaCoFrRole})`);
-  }
-  const preNcaFrOutput = preNcaFrParts.join('\n');
+  const preNcaFrOutput = formatFrLine(
+    s.preNcaFrName,
+    s.preNcaFrRole,
+    s.preNcaCoFrName,
+    s.preNcaCoFrRole
+  );
 
   return `🚨*Pre-NCA*
 

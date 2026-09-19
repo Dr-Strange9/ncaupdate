@@ -3,6 +3,7 @@
 @theme {
   --color-er-bg: #050505;
   --color-er-panel: #121212;
+  --color-er-panel-nested: #181818;
   --color-er-ink: #f4f4f5;
   --color-er-ink-soft: #a1a1aa;
   --color-er-line: #262626;
@@ -11,6 +12,7 @@
   --color-er-teal-soft: #181818;
   --color-er-amber: #f59e0b;
   --color-er-alert: #ef4444;
+  --color-er-slate: #64748b;
   --font-sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
@@ -19,6 +21,13 @@ body {
   background-color: var(--color-er-bg);
   color: var(--color-er-ink);
   font-family: var(--font-sans);
+}
+
+/* Prevent iOS Safari automatic viewport zooming on focus */
+input,
+select,
+textarea {
+  font-size: 16px;
 }
 
 /* Custom scrollbar for better appearance in dark mode */

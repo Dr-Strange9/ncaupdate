@@ -117,9 +117,10 @@ export function StandaloneAppButton() {
                 onClick={() => setShowInstructions(false)}
                 aria-label="Close installation instructions"
                 title="Close installation instructions"
-                className="p-1 rounded-md text-er-ink-soft hover:text-er-ink hover:bg-white/5 transition-colors cursor-pointer"
+                className="flex items-center gap-1 px-2 py-1 rounded-lg bg-[#222222] border border-[#333333] text-er-ink hover:bg-[#2c2c2c] text-[11px] font-bold cursor-pointer transition-colors"
               >
-                <X size={16} />
+                <X size={13} />
+                <span>Close</span>
               </button>
             </div>
 

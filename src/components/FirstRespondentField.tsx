@@ -74,7 +74,7 @@ export function FirstRespondentField({
 
       {/* Primary FR Respondent */}
       <div className="flex items-center gap-2">
-        <div className="w-16 min-h-[44px] flex-none py-2.5 text-xs font-extrabold text-center rounded-lg bg-[#141414] border border-er-line text-er-teal flex items-center justify-center">
+        <div className="w-16 min-h-[44px] flex-none py-2.5 text-[11px] font-extrabold text-center rounded-lg bg-[#181818] border border-[#2e2e2e] text-slate-300 flex items-center justify-center tracking-wider">
           FR
         </div>
         <div className="flex-1 min-w-0">
@@ -90,7 +90,7 @@ export function FirstRespondentField({
       {/* Secondary Co-FR Respondent (if active) */}
       {isCoFrActive && (
         <div className="flex items-center gap-2">
-          <div className="w-16 min-h-[44px] flex-none py-2.5 text-xs font-extrabold text-center rounded-lg bg-[#141414] border border-er-line text-er-teal flex items-center justify-center">
+          <div className="w-16 min-h-[44px] flex-none py-2.5 text-[11px] font-extrabold text-center rounded-lg bg-[#181818] border border-[#2e2e2e] text-slate-300 flex items-center justify-center tracking-wider">
             Co-FR
           </div>
           <div className="flex-1 min-w-0">
@@ -107,9 +107,10 @@ export function FirstRespondentField({
             onClick={handleSetFrOnly}
             aria-label="Remove Co-FR"
             title="Remove Co-FR"
-            className="flex-none w-10 h-[44px] rounded-lg bg-[#141414] border border-[#262626] text-er-ink-soft hover:text-er-alert hover:border-er-alert/50 transition-colors flex items-center justify-center cursor-pointer"
+            className="flex-none px-2.5 h-[44px] rounded-lg bg-red-950/40 border border-red-900/60 text-red-300 hover:bg-red-900/50 transition-colors flex items-center gap-1 text-[11px] font-bold cursor-pointer"
           >
-            <X size={16} />
+            <X size={14} />
+            <span>Remove</span>
           </button>
         </div>
       )}
